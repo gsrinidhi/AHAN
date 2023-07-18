@@ -1,0 +1,15 @@
+<map id="adf7030_1__SPI_ReadWrite_Fast" name="adf7030_1__SPI_ReadWrite_Fast">
+<area shape="rect" id="node2" href="$group__adf7030-1____state.html#ga47915136f3871f6ad931de81fa60b378" title="Generic Radio PHY Command Transfers. " alt="" coords="271,249,436,276"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____state.html#ga50a32083c7b26e79e278bd6ab428b0e3" title="Send Radio PHY Command. " alt="" coords="496,5,691,32"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____state.html#gae657dcba1056b2cd525857c75d478ad1" title="Send Radio PHY Special Command. " alt="" coords="484,56,703,83"/>
+<area shape="rect" id="node5" href="$group__adf7030-1____state.html#ga80dbe4150d3c045018d716b36d54a12b" title="Send Radio PHY Command and wait util PHY has transition to new state. " alt="" coords="496,107,691,149"/>
+<area shape="rect" id="node8" href="$group__adf7030-1____state.html#gaa7018482608e13a0eb591f6afcbcda1e" title="Polls Radio PHY SPI Status with NOPs until in Idle mode. " alt="" coords="498,173,689,200"/>
+<area shape="rect" id="node9" href="$group__adf7030-1____state.html#gafb99ca1d9734a398d45e5443ff220f0a" title="Polls Radio PHY SPI Status with NOPs until in Exec mode. " alt="" coords="493,224,693,251"/>
+<area shape="rect" id="node10" href="$group__adf7030-1____state.html#ga785422f909662c766cb347d0196d80c4" title="Polls Radio PHY SPI Status with NOPs until ready for operation. " alt="" coords="490,275,697,301"/>
+<area shape="rect" id="node11" href="$group__adf7030-1____state.html#ga8f9188903899c02788c3a13573de93ed" title="Polls Radio PHY SPI Status with NOPs until External IRQ flag is found. " alt="" coords="487,325,699,352"/>
+<area shape="rect" id="node12" href="$group__adf7030-1____state.html#ga9c0510d21c3b6cf5e3bed3da0b41409e" title="Polls Radio PHY SPI Status with NOPs until ready for operation. " alt="" coords="493,377,694,418"/>
+<area shape="rect" id="node13" href="$group__adf7030-1____state.html#ga2802b9eabc4bebbca7422a92d1e4afba" title="Polls Radio PHY SPI Status with NOPs until match is found. " alt="" coords="511,442,676,483"/>
+<area shape="rect" id="node14" href="$group__adf7030-1____state.html#gacaa42b93edfe342dfc5320e18115293f" title="Polls Radio PHY SPI Status until match is found. " alt="" coords="511,507,676,549"/>
+<area shape="rect" id="node6" href="$group__adf7030-1____core.html#ga8fc7a869a747268f0ed652ec4954a352" title="Enable the adf7030&#45;1. " alt="" coords="751,115,885,141"/>
+<area shape="rect" id="node7" href="$group__adf7030-1____core.html#ga3e7db2dcab244e93d0e97d24ee3eef86" title="Closes the adf7030&#45;1 instance. " alt="" coords="933,115,1061,141"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="adf7030_1__Setup" name="adf7030_1__Setup">
+<area shape="rect" id="node2" href="$group__adf7030-1____core.html#ga4e6538b9c04bde9618f4e7b58038d9fb" title="Initialise the Host GPIO Trigger pin to interface with the PHY Radio. " alt="" coords="183,5,384,32"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____irq.html#ga7a1d3e44568e67b5e5063e2c1176480d" title="Initializes Irq handling for the adf7030&#45;1 PHY. " alt="" coords="213,56,354,83"/>
+<area shape="rect" id="node7" href="$group__adf7030-1____spi.html#ga8ed475789457b9daf82159c11c706839" title="Initializes SPI device for communication with the adf7030&#45;1 PHY. " alt="" coords="213,107,353,133"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____irq.html#gafa48327dcbba3a14ed95d3af380af037" title="Setup the Host GPIO driver to trigger Callback on PHY interrupt. " alt="" coords="432,5,649,32"/>
+<area shape="rect" id="node6" href="$group__adf7030-1____irq.html#ga5e912a6947cd8173d211c2a65992bbb5" title="Default gpio driver Callback function for interrupt pin 0. " alt="" coords="453,56,628,83"/>
+<area shape="rect" id="node5" href="$group__adf7030-1____irq.html#ga82e2b150d2b209b4946f5a7976762d48" title="Changes GPIO Callback on PHY interrupt. " alt="" coords="697,5,892,32"/>
+<area shape="rect" id="node8" href="$group__adf7030-1____spi.html#gafcc201d7c62f9f31e0356e1af0f1327a" title="Change SPI Host to PHY Communication bitrate. " alt="" coords="451,107,631,133"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="adf7030_1__SPI_SetSpeed" name="adf7030_1__SPI_SetSpeed">
+<area shape="rect" id="node2" href="$group__adf7030-1____spi.html#gae687183b33c5cbad38f6af0582de7b53" title="Generic SPI Block Read/Write a number of words(s) to the adf7030&#45;1. " alt="" coords="234,5,389,47"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____spi.html#ga5833cc49a619bf22edf8bd85e885b7c6" title="Generic function to read or write a number of bytes between the Host and the PHY adf703x. " alt="" coords="233,71,389,112"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____spi.html#ga8ed475789457b9daf82159c11c706839" title="Initializes SPI device for communication with the adf7030&#45;1 PHY. " alt="" coords="241,137,381,163"/>
+<area shape="rect" id="node5" href="$group__adf7030-1____core.html#gaab9372b413f119016db09a7722b222c5" title="Setup the adf7030&#45;1 instance by initialising its device info structure. It also calls adf7030_1__SPI_..." alt="" coords="437,137,567,163"/>
+</map>

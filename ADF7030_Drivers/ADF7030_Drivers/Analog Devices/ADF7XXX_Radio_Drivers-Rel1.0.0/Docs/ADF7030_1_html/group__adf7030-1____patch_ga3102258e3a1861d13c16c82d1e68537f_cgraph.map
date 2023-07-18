@@ -1,0 +1,9 @@
+<map id="adf7030_1__SelfCheckPatch" name="adf7030_1__SelfCheckPatch">
+<area shape="rect" id="node2" href="$group__adf7030-1____patch.html#ga390ff5ab41b522ebfebba9251e135c0a" title="Function to verify content of a single Patch block in the PHY. " alt="" coords="241,39,436,65"/>
+<area shape="rect" id="node8" href="$group__adf7030-1____patch.html#ga3a7fd2ebaf84d3a0eb18b50ab89403b0" title="Function to write a single Patch block to the PHY Radio. " alt="" coords="242,89,435,116"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____patch.html#ga71c53aa1ca866512fbfaa5d99a3181e8" title="Generic Patch Section transfer function between Host and the Radio PHY. " alt="" coords="484,64,667,91"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____spi.html#ga7c54fff20ff0def7f7a3b9d7036f9cda" title="This function return the best Pointer id + offset for subsequent SPI transfert to the PHY &quot;Addr&quot; prov..." alt="" coords="715,5,940,32"/>
+<area shape="rect" id="node5" href="$group__adf7030-1____spi.html#ga87f62777c793d805dac75887f167b2bf" title="Change the SPI Radio mmap custom pointers 0 location. " alt="" coords="715,57,939,98"/>
+<area shape="rect" id="node7" href="$group__adf7030-1____spi.html#ga0b334362c3e1aeb752f58c60a263a9cf" title="Read &amp; Compare a number of bytes(s) from memory of the adf7030&#45;1 to Host starting at location pointed..." alt="" coords="744,122,911,163"/>
+<area shape="rect" id="node6" href="$group__adf7030-1____spi.html#ga6f0c25120c078623d42ede30fc690999" title="Write a number of word(s) from Host to memory of the adf7030&#45;1 starting at location pointed by &quot;pntr&quot;..." alt="" coords="988,64,1187,91"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="PATCH_DESCRIPTOR_Type" name="PATCH_DESCRIPTOR_Type">
+<area shape="rect" id="node2" href="$struct_p_a_t_c_h___c_h_e_c_k_s_u_m___d_e_s_c_r_i_p_t_o_r___type.html" title="PATCH_CHECKSUM_DESCRIPTOR_Type" alt="" coords="33,95,303,121"/>
+<area shape="rect" id="node3" href="$struct_p_a_t_c_h___s_e_c_t_i_o_n___type.html" title="PATCH_SECTION_Type" alt="" coords="5,5,168,32"/>
+<area shape="rect" id="node4" href="$unioncrc__config__type.html" title="crc_config_type" alt="" coords="193,5,306,32"/>
+<area shape="rect" id="node5" href="$struct_d_a_t_a___b_l_o_c_k___d_e_s_c_r_i_p_t_o_r___type.html" title="DATA_BLOCK_DESCRIPTOR_Type" alt="" coords="328,95,560,121"/>
+</map>

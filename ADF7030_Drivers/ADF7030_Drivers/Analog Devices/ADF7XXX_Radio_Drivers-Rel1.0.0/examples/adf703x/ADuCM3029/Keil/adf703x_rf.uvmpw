@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<ProjectWorkspace xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_mpw.xsd">
+
+  <SchemaVersion>1.0</SchemaVersion>
+
+  <Header>### uVision Project, (C) Keil Software</Header>
+
+  <WorkspaceName>WorkSpace</WorkspaceName>
+
+  <project>
+    <PathAndName>.\OfflineCalibration\OfflineCalibration.uvprojx</PathAndName>
+    <NodeIsActive>1</NodeIsActive>
+  </project>
+
+  <project>
+    <PathAndName>.\PER_rx\PER_rx.uvprojx</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\PER_tx\PER_tx.uvprojx</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\RX_packet\RX_packet.uvprojx</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\TX_packet\TX_packet.uvprojx</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\tx_test_modes\tx_test_modes.uvprojx</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>.\tx_test_modes_bis\tx_test_modes_bis.uvprojx</PathAndName>
+    <NodeIsExpanded>1</NodeIsExpanded>
+  </project>
+
+</ProjectWorkspace>

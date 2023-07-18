@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['cal_5fsuccess',['CAL_SUCCESS',['../struct_a_d_i___p_r_o_f_i_l_e___type.html#a102382b377dde924b4715e97a51c7f37',1,'ADI_PROFILE_Type']]],
+  ['calibration',['CALIBRATION',['../struct_a_d_i___s_m___d_a_t_a___type.html#a09bef0827a1809d3fcc33a5e455c180c',1,'ADI_SM_DATA_Type']]],
+  ['cca_5fcfg',['CCA_CFG',['../struct_a_d_i___p_r_o_f_i_l_e___type.html#a59e20d992e12c57334e4a711b99c98fa',1,'ADI_PROFILE_Type']]],
+  ['cca_5fcfg_5fb',['CCA_CFG_b',['../struct_a_d_i___p_r_o_f_i_l_e___type.html#aa874311cdb027026712d8a185829c76c',1,'ADI_PROFILE_Type']]],
+  ['cca_5freadback',['CCA_READBACK',['../struct_a_d_i___p_r_o_f_i_l_e___type.html#a2cee2aabe7e612c1b561991a2cb4d824',1,'ADI_PROFILE_Type']]],
+  ['cca_5freadback_5fb',['CCA_READBACK_b',['../struct_a_d_i___p_r_o_f_i_l_e___type.html#a9c89ebc46dbe1a8c18c989ab83224db3',1,'ADI_PROFILE_Type']]],
+  ['ch_5ffreq',['CH_FREQ',['../struct_a_d_i___p_r_o_f_i_l_e___type.html#a95041c1c1f1443f94f21c74594f44b03',1,'ADI_PROFILE_Type']]],
+  ['checkblockid',['CheckBlockId',['../struct_p_a_t_c_h___d_e_s_c_r_i_p_t_o_r___type.html#ac2c02cb6977ddbe6aec5c7dc717972e3',1,'PATCH_DESCRIPTOR_Type']]],
+  ['checkseq',['CheckSeq',['../struct_p_a_t_c_h___d_e_s_c_r_i_p_t_o_r___type.html#a4b99b7df3e94947b154eaf7e75283d0a',1,'PATCH_DESCRIPTOR_Type']]],
+  ['clk_5ftype',['CLK_TYPE',['../struct_a_d_i___p_r_o_f_i_l_e___type.html#ae960f9349a5001d04a7493227bc5f5bd',1,'ADI_PROFILE_Type']]],
+  ['cmd_5fready',['CMD_READY',['../structadi__adf7030__1___s_p_i___status.html#a3188cd3f647d59a5f02bf96509b7c125',1,'adi_adf7030_1_SPI_Status']]],
+  ['combined_5ftrx_5fmatch',['COMBINED_TRX_MATCH',['../struct_a_d_i___p_r_o_f_i_l_e___type.html#a78d3d344a10012ad0cbec8de36a1eb2b',1,'ADI_PROFILE_Type']]],
+  ['config',['CONFIG',['../struct_a_d_i___a_f_c___type.html#aed40378e2ce292435df51ff247d0cb78',1,'ADI_AFC_Type']]],
+  ['config_5fb',['CONFIG_b',['../struct_a_d_i___a_f_c___type.html#ab913ac1434ad83c7beff8cabd54ec28b',1,'ADI_AFC_Type']]],
+  ['configuration',['CONFIGURATION',['../struct_a_d_i___c_r_m_g_t___type.html#ab45933b0ec0fe2b5e3cf84a574923fcf',1,'ADI_CRMGT_Type']]],
+  ['crc_5fchk_5firqn',['CRC_CHK_IRQN',['../struct_a_d_i___i_r_q___c_t_r_l___type.html#a37ed27c0050fed7936aecf91b68e8f8b',1,'ADI_IRQ_CTRL_Type']]],
+  ['crc_5ffinal_5fxor',['CRC_FINAL_XOR',['../struct_a_d_i___g_e_n_e_r_i_c___p_k_t___type.html#a7e14c8e9043a4e1170752d3996e6577e',1,'ADI_GENERIC_PKT_Type']]],
+  ['crc_5flen',['CRC_LEN',['../struct_a_d_i___g_e_n_e_r_i_c___p_k_t___type.html#ad4174dcf8f6e5ce6b8e7da4f48623beb',1,'ADI_GENERIC_PKT_Type']]],
+  ['crc_5fpoly',['CRC_POLY',['../struct_a_d_i___g_e_n_e_r_i_c___p_k_t___type.html#adf54547cb5c482c4885d43c58bdefbc3',1,'ADI_GENERIC_PKT_Type']]],
+  ['crc_5fseed',['CRC_SEED',['../struct_a_d_i___g_e_n_e_r_i_c___p_k_t___type.html#a9773dd4e92acb8758b8ca85b4bfc8a8d',1,'ADI_GENERIC_PKT_Type']]],
+  ['crc_5fshift_5fin_5fzeros',['CRC_SHIFT_IN_ZEROS',['../struct_a_d_i___g_e_n_e_r_i_c___p_k_t___type.html#a504ffaf920ce58dfbc49bc8a005fc5f1',1,'ADI_GENERIC_PKT_Type']]],
+  ['curr_5fstate',['CURR_STATE',['../struct_a_d_i___m_i_s_c___type.html#aaab39c58f4f2e8af27be4b8f8322f763',1,'ADI_MISC_Type']]]
+];

@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "adi_initialize.h": "c",
+        "common.h": "c",
+        "adf7030-1__common.h": "c",
+        "adi_types.h": "c"
+    }
+}

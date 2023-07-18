@@ -1,0 +1,14 @@
+<map id="adi_adf7030_1_info" name="adi_adf7030_1_info">
+<area shape="rect" id="node2" href="$struct_m_e_m___c_f_g___d_e_s_c_r_i_p_t_o_r___type.html" title="MEM_CFG_DESCRIPTOR_Type" alt="" coords="672,44,884,71"/>
+<area shape="rect" id="node3" href="$struct_d_a_t_a___b_l_o_c_k___d_e_s_c_r_i_p_t_o_r___type.html" title="DATA_BLOCK_DESCRIPTOR_Type" alt="" coords="299,140,531,167"/>
+<area shape="rect" id="node5" href="$struct_p_a_t_c_h___d_e_s_c_r_i_p_t_o_r___type.html" title="PATCH_DESCRIPTOR_Type" alt="" coords="683,201,873,228"/>
+<area shape="rect" id="node4" href="$structconfig__info__t.html" title="config_info_t" alt="" coords="368,44,463,71"/>
+<area shape="rect" id="node6" href="$struct_p_a_t_c_h___c_h_e_c_k_s_u_m___d_e_s_c_r_i_p_t_o_r___type.html" title="PATCH_CHECKSUM_DESCRIPTOR_Type" alt="" coords="280,220,551,247"/>
+<area shape="rect" id="node7" href="$struct_p_a_t_c_h___s_e_c_t_i_o_n___type.html" title="PATCH_SECTION_Type" alt="" coords="5,195,168,221"/>
+<area shape="rect" id="node8" href="$unioncrc__config__type.html" title="crc_config_type" alt="" coords="30,245,143,272"/>
+<area shape="rect" id="node9" href="$structadi__adf7030__1___g_p_i_o___trig__info.html" title="adi_adf7030_1_GPIO\l_Trig_info" alt="" coords="706,253,850,294"/>
+<area shape="rect" id="node10" href="$structadi__adf7030__1___g_p_i_o___int__info.html" title="adi_adf7030_1_GPIO\l_Int_info" alt="" coords="706,318,850,359"/>
+<area shape="rect" id="node11" href="$structadi__adf7030__1___s_p_i___info.html" title="adi_adf7030_1_SPI_Info" alt="" coords="698,384,858,411"/>
+<area shape="rect" id="node12" href="$structadi__adf7030__1___s_p_i___status.html" title="adi_adf7030_1_SPI_Status" alt="" coords="326,384,505,411"/>
+<area shape="rect" id="node13" href="$structadi__adf7030__1___g_p_i_o___reset__info.html" title="adi_adf7030_1_GPIO\l_Reset_info" alt="" coords="706,435,850,477"/>
+</map>

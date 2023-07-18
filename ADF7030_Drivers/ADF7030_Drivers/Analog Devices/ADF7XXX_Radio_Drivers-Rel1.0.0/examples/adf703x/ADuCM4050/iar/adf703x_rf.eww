@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<workspace>
+  <project>
+    <path>$WS_DIR$\OfflineCalibration\OfflineCalibration.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\tx_test_modes\tx_test_modes.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\tx_test_modes_bis\tx_test_modes_bis.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\TX_packet\TX_packet.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\RX_packet\RX_packet.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\PER_rx\PER_rx.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\PER_tx\PER_tx.ewp</path>
+  </project>
+  <batchBuild/>
+</workspace>
+
+

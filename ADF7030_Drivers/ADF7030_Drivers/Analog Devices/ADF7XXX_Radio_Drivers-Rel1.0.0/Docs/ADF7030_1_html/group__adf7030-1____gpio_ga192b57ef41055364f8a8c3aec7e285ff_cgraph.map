@@ -1,0 +1,4 @@
+<map id="adf7030_1__GPIO_GetCfg" name="adf7030_1__GPIO_GetCfg">
+<area shape="rect" id="node2" href="$group__adf7030-1____mem.html#ga487dca82221f52f7af85a3156ede64ea" title="Generic readback of a bitfield value from the Radio PHY via the SPI. " alt="" coords="228,5,400,32"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____mem.html#gacda1914daaf2eded7347710b0dbdb78a" title="Read &quot;nbBytes&quot; memory location via the SPI. " alt="" coords="448,5,627,32"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="adf7030_1__XferPatch" name="adf7030_1__XferPatch">
+<area shape="rect" id="node2" href="$group__adf7030-1____patch.html#ga7c495e105742698cc777a712e2da9ad2" title="Function call to readback the patch from Radio PHY. " alt="" coords="206,5,365,32"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____patch.html#ga1f1e316b541da1c27fb0a24f0b7efc7d" title="Function call to verify the integrity of the patch. " alt="" coords="204,56,367,83"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____patch.html#gaf6c0681c1cf8597650889b34d1b4bd2f" title="Function call to write patch to Radio PHY. " alt="" coords="205,107,365,133"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="adf7030_1__MEM_CheckByteAccess" name="adf7030_1__MEM_CheckByteAccess">
+<area shape="rect" id="node2" href="$group__adf7030-1____mem.html#gabd27b8e9b962f82fbd947b43e1fb6bad" title="Generic setting of a Radio PHY bitfield to a value via the SPI. " alt="" coords="251,31,421,57"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____core.html#gacc594fe578d3493100c338ffbd11ff53" title="Setup PHY gpio to for external trigger command. " alt="" coords="693,5,883,32"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____gpio.html#gac3150c08d65f94ec1837e879e577c4e6" title="Setup individual GPIO configuration on the PHY Radio. " alt="" coords="469,56,643,83"/>
+<area shape="rect" id="node5" href="$group__adf7030-1____irq.html#gac21dfc3398c0190f1d1fe74e3adbcd48" title="Setup PHY Radio GPIO irq. " alt="" coords="691,56,885,83"/>
+</map>

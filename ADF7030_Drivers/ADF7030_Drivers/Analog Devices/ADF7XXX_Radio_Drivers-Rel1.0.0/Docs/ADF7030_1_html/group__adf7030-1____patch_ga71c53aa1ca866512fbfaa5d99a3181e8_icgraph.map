@@ -1,0 +1,11 @@
+<map id="adf7030_1__XferPatchBlock" name="adf7030_1__XferPatchBlock">
+<area shape="rect" id="node2" href="$group__adf7030-1____patch.html#gac583b9f3bee6f80cf1f418c6e35f57c2" title="Function to read a single Patch block to the PHY Radio. " alt="" coords="237,5,429,32"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____patch.html#ga390ff5ab41b522ebfebba9251e135c0a" title="Function to verify content of a single Patch block in the PHY. " alt="" coords="236,56,431,83"/>
+<area shape="rect" id="node5" href="$group__adf7030-1____patch.html#ga3a7fd2ebaf84d3a0eb18b50ab89403b0" title="Function to write a single Patch block to the PHY Radio. " alt="" coords="237,107,430,133"/>
+<area shape="rect" id="node6" href="$group__adf7030-1____patch.html#ga6c7b2435960b91a621d2b7b59eae91f6" title="Generic Patch checksum configuration transfers function between Host and the Radio PHY..." alt="" coords="244,157,423,184"/>
+<area shape="rect" id="node7" href="$group__adf7030-1____patch.html#ga4c271dbe767d130f0efd24c9e98bd2f9" title="Generic Patch transfers function between Host and the Radio PHY. " alt="" coords="258,208,409,235"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____patch.html#ga3102258e3a1861d13c16c82d1e68537f" title="Function call to perform PHY Radio patch self&#45;checking. " alt="" coords="479,81,667,108"/>
+<area shape="rect" id="node8" href="$group__adf7030-1____patch.html#ga7c495e105742698cc777a712e2da9ad2" title="Function call to readback the patch from Radio PHY. " alt="" coords="493,157,652,184"/>
+<area shape="rect" id="node9" href="$group__adf7030-1____patch.html#ga1f1e316b541da1c27fb0a24f0b7efc7d" title="Function call to verify the integrity of the patch. " alt="" coords="491,208,654,235"/>
+<area shape="rect" id="node10" href="$group__adf7030-1____patch.html#gaf6c0681c1cf8597650889b34d1b4bd2f" title="Function call to write patch to Radio PHY. " alt="" coords="493,259,653,285"/>
+</map>

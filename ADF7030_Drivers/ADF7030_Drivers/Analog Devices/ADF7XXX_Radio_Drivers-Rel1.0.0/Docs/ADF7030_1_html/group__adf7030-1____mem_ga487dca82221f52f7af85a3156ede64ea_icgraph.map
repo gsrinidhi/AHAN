@@ -1,0 +1,6 @@
+<map id="adf7030_1__SPI_GetField" name="adf7030_1__SPI_GetField">
+<area shape="rect" id="node2" href="$group__adf7030-1____core.html#ga62017fd21878e67cfef789d70e93ea45" title="Readback the PHY Packet configuration location. " alt="" coords="225,5,457,32"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____core.html#ga2309cbb0c5a5985b348bd43e4c351b40" title="Readback the PHY Radio profile location. " alt="" coords="237,56,446,83"/>
+<area shape="rect" id="node5" href="$group__adf7030-1____gpio.html#ga192b57ef41055364f8a8c3aec7e285ff" title="Get individual GPIO configuration from the PHY Radio. " alt="" coords="254,107,429,133"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____core.html#gaa8110804874966018d0b7bfe40cbc001" title="Initialise the Host shadow configuration of the PHY Radio. " alt="" coords="505,31,704,57"/>
+</map>

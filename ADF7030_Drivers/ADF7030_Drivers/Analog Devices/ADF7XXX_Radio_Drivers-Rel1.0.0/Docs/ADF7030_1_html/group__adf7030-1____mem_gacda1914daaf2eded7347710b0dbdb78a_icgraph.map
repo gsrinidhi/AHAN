@@ -1,0 +1,15 @@
+<map id="adf7030_1__SPI_GetBytes" name="adf7030_1__SPI_GetBytes">
+<area shape="rect" id="node2" href="$group__adf7030-1____mem.html#ga487dca82221f52f7af85a3156ede64ea" title="Generic readback of a bitfield value from the Radio PHY via the SPI. " alt="" coords="239,56,411,83"/>
+<area shape="rect" id="node7" href="$group__adf7030-1____mem.html#ga546c8e71fa3c42728b481b3348579edf" title="Read a 16bits memory location via the SPI. " alt="" coords="232,107,419,133"/>
+<area shape="rect" id="node8" href="$group__adf7030-1____mem.html#ga2179b983fc7997e4cf7237522e743d6e" title="Read a 24bits memory location via the SPI. " alt="" coords="232,157,419,184"/>
+<area shape="rect" id="node9" href="$group__adf7030-1____mem.html#ga9e86404d1b2f124199ce38c1bf95d366" title="Read a single 32bits memory location via the SPI. " alt="" coords="232,208,419,235"/>
+<area shape="rect" id="node10" href="$group__adf7030-1____mem.html#ga267c4953db9f0dbe63d0a54ce824d356" title="Read a 8bits memory location via the SPI. " alt="" coords="235,259,415,285"/>
+<area shape="rect" id="node11" href="$group__adf7030-1____mem.html#gabd27b8e9b962f82fbd947b43e1fb6bad" title="Generic setting of a Radio PHY bitfield to a value via the SPI. " alt="" coords="240,309,411,336"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____core.html#ga2309cbb0c5a5985b348bd43e4c351b40" title="Readback the PHY Radio profile location. " alt="" coords="478,5,687,32"/>
+<area shape="rect" id="node5" href="$group__adf7030-1____core.html#ga62017fd21878e67cfef789d70e93ea45" title="Readback the PHY Packet configuration location. " alt="" coords="467,56,699,83"/>
+<area shape="rect" id="node6" href="$group__adf7030-1____gpio.html#ga192b57ef41055364f8a8c3aec7e285ff" title="Get individual GPIO configuration from the PHY Radio. " alt="" coords="495,107,670,133"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____core.html#gaa8110804874966018d0b7bfe40cbc001" title="Initialise the Host shadow configuration of the PHY Radio. " alt="" coords="747,31,945,57"/>
+<area shape="rect" id="node12" href="$group__adf7030-1____core.html#gacc594fe578d3493100c338ffbd11ff53" title="Setup PHY gpio to for external trigger command. " alt="" coords="751,284,941,311"/>
+<area shape="rect" id="node13" href="$group__adf7030-1____gpio.html#gac3150c08d65f94ec1837e879e577c4e6" title="Setup individual GPIO configuration on the PHY Radio. " alt="" coords="496,335,669,361"/>
+<area shape="rect" id="node14" href="$group__adf7030-1____irq.html#gac21dfc3398c0190f1d1fe74e3adbcd48" title="Setup PHY Radio GPIO irq. " alt="" coords="749,335,943,361"/>
+</map>

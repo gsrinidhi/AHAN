@@ -1,0 +1,25 @@
+<map id="adf7030_1__SPI_wr_word_b_p" name="adf7030_1__SPI_wr_word_b_p">
+<area shape="rect" id="node2" href="$group__adf7030-1____spi.html#ga87f62777c793d805dac75887f167b2bf" title="Change the SPI Radio mmap custom pointers 0 location. " alt="" coords="252,327,476,369"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____mem.html#ga1ca676315976719ad485f1a4772e876d" title="Generic Data block transfers function between Host and the Radio PHY. " alt="" coords="527,211,703,237"/>
+<area shape="rect" id="node15" href="$group__adf7030-1____patch.html#ga71c53aa1ca866512fbfaa5d99a3181e8" title="Generic Patch Section transfer function between Host and the Radio PHY. " alt="" coords="524,484,707,511"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____mem.html#gaa184749ff4ec2d53c167d51cbadb9b18" title="Function call to read the Data block. " alt="" coords="759,5,945,32"/>
+<area shape="rect" id="node6" href="$group__adf7030-1____mem.html#gaaed60fb0edafdf66ac0dd799752e9a5a" title="Function call to partially read a section of the Host Data block. " alt="" coords="759,57,945,98"/>
+<area shape="rect" id="node7" href="$group__adf7030-1____mem.html#gacf6942abdfef8b5994cb07ffc51acd05" title="Function call to verify the integrity of Data block. " alt="" coords="758,123,946,149"/>
+<area shape="rect" id="node8" href="$group__adf7030-1____mem.html#ga4373955bd51900d2f60a961005aa83cb" title="Function call to verify the integrity of a portion of a Host Data block. " alt="" coords="769,174,935,215"/>
+<area shape="rect" id="node9" href="$group__adf7030-1____mem.html#gab45789e38821a80b3f9cce11b91277bc" title="Function call to write the Data block. " alt="" coords="759,240,945,267"/>
+<area shape="rect" id="node10" href="$group__adf7030-1____mem.html#gae2459967f63b227938db62e1b5388afc" title="Function call to partially write a section of the Host Data block. " alt="" coords="757,291,947,333"/>
+<area shape="rect" id="node11" href="$group__adf7030-1____mem.html#gae8fab7f4a9d7bc3432f2b85b789510e1" title="Generic Configuration transfers function between Host and the Radio PHY. " alt="" coords="776,357,928,384"/>
+<area shape="rect" id="node5" href="$group__adf7030-1____core.html#gaa8110804874966018d0b7bfe40cbc001" title="Initialise the Host shadow configuration of the PHY Radio. " alt="" coords="997,5,1196,32"/>
+<area shape="rect" id="node12" href="$group__adf7030-1____mem.html#gaf9027afec4eb550d5d563efbb1ed3cbb" title="Function call to read Configuration from Radio PHY. " alt="" coords="1016,307,1177,333"/>
+<area shape="rect" id="node13" href="$group__adf7030-1____mem.html#gaeb52c8834f7abccae8965541f562fe80" title="Function call to verify the integrity of the patch. " alt="" coords="1015,357,1179,384"/>
+<area shape="rect" id="node14" href="$group__adf7030-1____mem.html#ga79e0355d8a6b661e6b0d7d6be01d04a2" title="Function call to write Configuration to Radio PHY. " alt="" coords="1015,408,1178,435"/>
+<area shape="rect" id="node16" href="$group__adf7030-1____patch.html#gac583b9f3bee6f80cf1f418c6e35f57c2" title="Function to read a single Patch block to the PHY Radio. " alt="" coords="756,408,948,435"/>
+<area shape="rect" id="node17" href="$group__adf7030-1____patch.html#ga390ff5ab41b522ebfebba9251e135c0a" title="Function to verify content of a single Patch block in the PHY. " alt="" coords="755,459,949,485"/>
+<area shape="rect" id="node19" href="$group__adf7030-1____patch.html#ga3a7fd2ebaf84d3a0eb18b50ab89403b0" title="Function to write a single Patch block to the PHY Radio. " alt="" coords="755,509,949,536"/>
+<area shape="rect" id="node20" href="$group__adf7030-1____patch.html#ga6c7b2435960b91a621d2b7b59eae91f6" title="Generic Patch checksum configuration transfers function between Host and the Radio PHY..." alt="" coords="763,560,941,587"/>
+<area shape="rect" id="node21" href="$group__adf7030-1____patch.html#ga4c271dbe767d130f0efd24c9e98bd2f9" title="Generic Patch transfers function between Host and the Radio PHY. " alt="" coords="777,611,927,637"/>
+<area shape="rect" id="node18" href="$group__adf7030-1____patch.html#ga3102258e3a1861d13c16c82d1e68537f" title="Function call to perform PHY Radio patch self&#45;checking. " alt="" coords="1003,484,1191,511"/>
+<area shape="rect" id="node22" href="$group__adf7030-1____patch.html#ga7c495e105742698cc777a712e2da9ad2" title="Function call to readback the patch from Radio PHY. " alt="" coords="1017,560,1176,587"/>
+<area shape="rect" id="node23" href="$group__adf7030-1____patch.html#ga1f1e316b541da1c27fb0a24f0b7efc7d" title="Function call to verify the integrity of the patch. " alt="" coords="1015,611,1178,637"/>
+<area shape="rect" id="node24" href="$group__adf7030-1____patch.html#gaf6c0681c1cf8597650889b34d1b4bd2f" title="Function call to write patch to Radio PHY. " alt="" coords="1017,661,1177,688"/>
+</map>

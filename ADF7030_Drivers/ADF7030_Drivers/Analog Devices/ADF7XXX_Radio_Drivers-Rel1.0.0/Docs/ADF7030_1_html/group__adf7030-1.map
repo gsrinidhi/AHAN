@@ -1,0 +1,11 @@
+<map id="ADF7030&#45;1 Driver" name="ADF7030&#45;1 Driver">
+<area shape="rect" id="node1" href="$group__adf7030-1____irq.html" title="Interrupt Interface" alt="" coords="210,5,333,32"/>
+<area shape="rect" id="node2" href="$group__adf7030-1____cfg.html" title="Configuration" alt="" coords="223,56,320,83"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____spi.html" title="SPI Communication Interface" alt="" coords="176,107,367,133"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____patch.html" title="Patch Interface" alt="" coords="217,157,326,184"/>
+<area shape="rect" id="node5" href="$group__adf7030-1____core.html" title="Core Interface" alt="" coords="220,208,323,235"/>
+<area shape="rect" id="node6" href="$group__adf7030-1____state.html" title="SPI Command Interface" alt="" coords="192,259,351,285"/>
+<area shape="rect" id="node8" href="$group__adf7030-1____mem.html" title="Memory Interface" alt="" coords="210,309,333,336"/>
+<area shape="rect" id="node9" href="$group__adf7030-1____gpio.html" title="GPIO Interface" alt="" coords="218,360,325,387"/>
+<area shape="rect" id="node10" href="$group__adf7030-1__headers.html" title="Headers" alt="" coords="236,411,307,437"/>
+</map>

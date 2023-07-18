@@ -1,0 +1,5 @@
+<map id="adf7030_1__XferConfig" name="adf7030_1__XferConfig">
+<area shape="rect" id="node2" href="$group__adf7030-1____mem.html#gaf9027afec4eb550d5d563efbb1ed3cbb" title="Function call to read Configuration from Radio PHY. " alt="" coords="207,5,368,32"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____mem.html#gaeb52c8834f7abccae8965541f562fe80" title="Function call to verify the integrity of the patch. " alt="" coords="205,56,369,83"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____mem.html#ga79e0355d8a6b661e6b0d7d6be01d04a2" title="Function call to write Configuration to Radio PHY. " alt="" coords="206,107,369,133"/>
+</map>

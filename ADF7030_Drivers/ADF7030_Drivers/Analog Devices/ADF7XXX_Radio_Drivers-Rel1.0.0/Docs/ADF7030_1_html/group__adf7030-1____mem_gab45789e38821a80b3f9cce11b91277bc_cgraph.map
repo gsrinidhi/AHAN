@@ -1,0 +1,7 @@
+<map id="adf7030_1__WriteDataBlock" name="adf7030_1__WriteDataBlock">
+<area shape="rect" id="node2" href="$group__adf7030-1____mem.html#ga1ca676315976719ad485f1a4772e876d" title="Generic Data block transfers function between Host and the Radio PHY. " alt="" coords="240,64,416,91"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____spi.html#ga7c54fff20ff0def7f7a3b9d7036f9cda" title="This function return the best Pointer id + offset for subsequent SPI transfert to the PHY &quot;Addr&quot; prov..." alt="" coords="464,5,689,32"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____spi.html#ga87f62777c793d805dac75887f167b2bf" title="Change the SPI Radio mmap custom pointers 0 location. " alt="" coords="465,57,689,98"/>
+<area shape="rect" id="node6" href="$group__adf7030-1____spi.html#ga0b334362c3e1aeb752f58c60a263a9cf" title="Read &amp; Compare a number of bytes(s) from memory of the adf7030&#45;1 to Host starting at location pointed..." alt="" coords="493,122,660,163"/>
+<area shape="rect" id="node5" href="$group__adf7030-1____spi.html#ga6f0c25120c078623d42ede30fc690999" title="Write a number of word(s) from Host to memory of the adf7030&#45;1 starting at location pointed by &quot;pntr&quot;..." alt="" coords="737,64,936,91"/>
+</map>

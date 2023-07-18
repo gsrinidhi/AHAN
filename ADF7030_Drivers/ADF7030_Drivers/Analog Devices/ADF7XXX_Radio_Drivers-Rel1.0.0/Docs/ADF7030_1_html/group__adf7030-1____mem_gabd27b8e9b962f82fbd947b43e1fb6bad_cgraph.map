@@ -1,0 +1,5 @@
+<map id="adf7030_1__SPI_SetField" name="adf7030_1__SPI_SetField">
+<area shape="rect" id="node2" href="$group__adf7030-1____mem.html#ga301747e36458e5763d98d3cb73c9122f" title="Generic Function to check if byte rw operation is permitted. " alt="" coords="224,5,421,47"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____mem.html#gacda1914daaf2eded7347710b0dbdb78a" title="Read &quot;nbBytes&quot; memory location via the SPI. " alt="" coords="233,71,412,98"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____mem.html#ga7dacc77a0474b14d4e15e12bfc1a46d7" title="Writes &quot;nbBytes&quot; memory location via the SPI. " alt="" coords="234,122,411,149"/>
+</map>

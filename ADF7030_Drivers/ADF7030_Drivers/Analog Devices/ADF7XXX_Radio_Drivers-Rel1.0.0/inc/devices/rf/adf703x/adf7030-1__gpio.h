@@ -1,0 +1,224 @@
+/*!
+ *****************************************************************************
+  @file:	adf7030-1__gpio.h 
+  @brief:	...  
+  @version:	$Revision: 
+  @date:	$Date:
+ -----------------------------------------------------------------------------
+Copyright (c) 2017, Analog Devices, Inc.  All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted (subject to the limitations in the disclaimer below) provided that
+the following conditions are met:
+  - Redistributions of source code must retain the above copyright notice, 
+    this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation 
+    and/or other materials provided with the distribution.
+  - Neither the name of Analog Devices, Inc. nor the names of its contributors 
+    may be used to endorse or promote products derived from this software without
+    specific prior written permission.
+
+NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY 
+THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT 
+NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
+PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
+OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
+OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED 
+OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*****************************************************************************/
+
+
+#ifndef _ADF7030_1__GPIO_H_
+#define _ADF7030_1__GPIO_H_
+
+
+/** \addtogroup adf7030-1 adf7030-1 Driver
+ *  @{
+ */
+
+/** \addtogroup adf7030-1__gpio GPIO Interface
+ *  @{
+ */
+
+
+/*! Enumeration of different PHY Radio gpio configuration
+ *
+ */
+typedef enum {
+    
+    /*! External IRQ0 input */
+    GPIO_TRIG_IN0       = 4,
+    
+    /*! External IRQ1 input */
+    GPIO_TRIG_IN1       = 5,
+    
+    /*! External IRQ0 output */
+    GPIO_IRQ_OUT0       = 6,
+    
+    /*! External IRQ1 output */
+    GPIO_IRQ_OUT1       = 7,
+
+    /*! Sport interface baseband TX data input */
+    SPORT_TX_DATA       = 12,
+
+    /*! Sport interface baseband RX data output */
+    SPORT_RX_DATA       = 13,
+
+    /*! Sport interface baseband TRX clock output */
+    SPORT_TRX_CLOCK     = 14,
+    
+    /*! General Purpose Input 0 */
+    GPIO_IN0            = 16,
+
+    /*! General Purpose Input 1 */
+    GPIO_IN1            = 17,
+
+    /*! General Purpose Input 2 */
+    GPIO_IN2            = 18,
+
+    /*! General Purpose Input 3 */
+    GPIO_IN3            = 19,
+
+    /*! General Purpose Input 4 */
+    GPIO_IN4            = 20,
+
+    /*! General Purpose Input 5 */
+    GPIO_IN5            = 21,
+
+    /*! General Purpose Input 6 */
+    GPIO_IN6            = 22,
+
+    /*! General Purpose Input 7 */
+    GPIO_IN7            = 23,
+      
+    /*! General Purpose Output 0 */
+    GPIO_OUT0           = 24,
+
+    /*! General Purpose Output 1 */
+    GPIO_OUT1           = 25,
+
+    /*! General Purpose Output 2 */
+    GPIO_OUT2           = 26,
+
+    /*! General Purpose Output 3 */
+    GPIO_OUT3           = 27,
+
+    /*! General Purpose Output 4 */
+    GPIO_OUT4           = 28,
+
+    /*! General Purpose Output 5 */
+    GPIO_OUT5           = 29,
+
+    /*! General Purpose Output 6 */
+    GPIO_OUT6           = 30,
+
+    /*! General Purpose Output 7 */
+    GPIO_OUT7           = 31,
+      
+    /*! User defined synchronous Clock output */
+    GPCLK_OUT           = 36,
+    
+    /*! Debug mode */
+    DEBUG               = 63
+      
+} ADI_ADF7030_1_GPIO_CFG;
+
+
+/*! Enumeration of Trigger event options
+ *
+ */
+typedef enum {
+    
+    /*! External PHY Radio trigger on a rising edge */
+    RISING_EDGE         = 0,
+    
+    /*! External PHY Radio trigger on a falling edge */
+    FALLING_EDGE        = 1,
+
+    /*! External PHY Radio trigger on eitherrising or falling edge */
+    BOTH_EDGE           = 2,
+
+    /*! External PHY Radio trigger on a low level */
+    LOW_LEVEL           = 3,
+
+    /*! External PHY Radio trigger on a high level */
+    HIGH_LEVEL          = 4
+
+} ADI_ADF7030_1_GPIO_TRIG_EVENT;
+
+
+/*! Enumeration of GPIO dataout bus pins
+ *
+ */
+typedef enum {   
+    /*! General purpose PHY Radio IO Bus pin 0 */
+    ADF7030_1_IOBUS_PIN0        = 1UL << ADF7030_1_GPIO0,
+
+    /*! General purpose PHY Radio IO Bus pin 1 */
+    ADF7030_1_IOBUS_PIN1        = 1UL << ADF7030_1_GPIO1,
+      
+    /*! General purpose PHY Radio IO Bus pin 2 */
+    ADF7030_1_IOBUS_PIN2        = 1UL << ADF7030_1_GPIO2,
+      
+    /*! General purpose PHY Radio IO Bus pin 3 */
+    ADF7030_1_IOBUS_PIN3        = 1UL << ADF7030_1_GPIO3,
+      
+    /*! General purpose PHY Radio IO Bus pin 4 */
+    ADF7030_1_IOBUS_PIN4        = 1UL << ADF7030_1_GPIO4,
+      
+    /*! General purpose PHY Radio IO Bus pin 5 */
+    ADF7030_1_IOBUS_PIN5        = 1UL << ADF7030_1_GPIO5,
+      
+    /*! General purpose PHY Radio IO Bus pin 6 */
+    ADF7030_1_IOBUS_PIN6        = 1UL << ADF7030_1_GPIO6,
+      
+    /*! General purpose PHY Radio IO Bus pin 7 */
+    ADF7030_1_IOBUS_PIN7        = 1UL << ADF7030_1_GPIO7,
+    
+} ADI_ADF7030_1_BUSIO_PIN;
+      
+
+/* Setup individual GPIO configuration on the PHY Radio */
+ADI_ADF7030_1_RESULT adf7030_1__GPIO_SetCfg(
+    ADI_ADF7030_1_SPI_INFO *    pSPIDevInfo,
+    ADI_ADF7030_1_GPIO_PIN      eGPIO,
+    ADI_ADF7030_1_GPIO_CFG      eCFG,
+    bool                        bDirect
+);
+
+/* Get individual GPIO configuration from the PHY Radio */
+ADI_ADF7030_1_RESULT adf7030_1__GPIO_GetCfg(
+    ADI_ADF7030_1_SPI_INFO *    pSPIDevInfo,
+    ADI_ADF7030_1_GPIO_PIN      eGPIO,
+    ADI_ADF7030_1_GPIO_CFG *    peCFG,
+    bool                        bDirect
+);
+
+/* Set individual GPIO pin of the PHY Radio */
+ADI_ADF7030_1_RESULT adf7030_1__GPIO_SetPin(
+    ADI_ADF7030_1_SPI_INFO *    pSPIDevInfo,
+    ADI_ADF7030_1_BUSIO_PIN     ePin
+);
+
+/* Clear individual GPIO pin of the PHY Radio */
+ADI_ADF7030_1_RESULT adf7030_1__GPIO_ClrPin(
+    ADI_ADF7030_1_SPI_INFO *    pSPIDevInfo,
+    ADI_ADF7030_1_BUSIO_PIN     ePin
+);
+
+
+#define adf7030_1__GPIO_PINCFG(ePIN, eCFG) adf7030_1__GPIO_SetCfg( pSPIDevInfo, ePIN, eCFG, false)
+//#define adf7030_1__GPIO_TRIG_Cfg(PIN, TRIG, State) adf7030_1__GPIO_SetupExtTrig(pSPIDevInfo, TRIG, PIN, State)
+
+
+/** @} */ /* End of group adf7030-1__gpio GPIO Interface */
+/** @} */ /* End of group adf7030-1 adf7030-1 Driver */
+
+#endif /* _ADF7030_1__GPIO_H_ */

@@ -1,0 +1,4 @@
+<map id="adf7030_1__GPIO_SetCfg" name="adf7030_1__GPIO_SetCfg">
+<area shape="rect" id="node2" href="$group__adf7030-1____irq.html#gac21dfc3398c0190f1d1fe74e3adbcd48" title="Setup PHY Radio GPIO irq. " alt="" coords="227,5,421,32"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____core.html#gacc594fe578d3493100c338ffbd11ff53" title="Setup PHY gpio to for external trigger command. " alt="" coords="229,56,419,83"/>
+</map>

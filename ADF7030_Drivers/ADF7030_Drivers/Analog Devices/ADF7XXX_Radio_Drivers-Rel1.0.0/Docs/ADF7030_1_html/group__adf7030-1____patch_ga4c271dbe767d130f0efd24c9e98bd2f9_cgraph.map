@@ -1,0 +1,7 @@
+<map id="adf7030_1__XferPatch" name="adf7030_1__XferPatch">
+<area shape="rect" id="node2" href="$group__adf7030-1____patch.html#ga71c53aa1ca866512fbfaa5d99a3181e8" title="Generic Patch Section transfer function between Host and the Radio PHY. " alt="" coords="204,64,387,91"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____spi.html#ga7c54fff20ff0def7f7a3b9d7036f9cda" title="This function return the best Pointer id + offset for subsequent SPI transfert to the PHY &quot;Addr&quot; prov..." alt="" coords="435,5,660,32"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____spi.html#ga87f62777c793d805dac75887f167b2bf" title="Change the SPI Radio mmap custom pointers 0 location. " alt="" coords="435,57,659,98"/>
+<area shape="rect" id="node6" href="$group__adf7030-1____spi.html#ga0b334362c3e1aeb752f58c60a263a9cf" title="Read &amp; Compare a number of bytes(s) from memory of the adf7030&#45;1 to Host starting at location pointed..." alt="" coords="464,122,631,163"/>
+<area shape="rect" id="node5" href="$group__adf7030-1____spi.html#ga6f0c25120c078623d42ede30fc690999" title="Write a number of word(s) from Host to memory of the adf7030&#45;1 starting at location pointed by &quot;pntr&quot;..." alt="" coords="708,64,907,91"/>
+</map>

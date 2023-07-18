@@ -1,0 +1,5 @@
+<map id="adf7030_1__SPI_SetField" name="adf7030_1__SPI_SetField">
+<area shape="rect" id="node2" href="$group__adf7030-1____gpio.html#gac3150c08d65f94ec1837e879e577c4e6" title="Setup individual GPIO configuration on the PHY Radio. " alt="" coords="224,5,397,32"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____core.html#gacc594fe578d3493100c338ffbd11ff53" title="Setup PHY gpio to for external trigger command. " alt="" coords="447,56,638,83"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____irq.html#gac21dfc3398c0190f1d1fe74e3adbcd48" title="Setup PHY Radio GPIO irq. " alt="" coords="445,5,640,32"/>
+</map>

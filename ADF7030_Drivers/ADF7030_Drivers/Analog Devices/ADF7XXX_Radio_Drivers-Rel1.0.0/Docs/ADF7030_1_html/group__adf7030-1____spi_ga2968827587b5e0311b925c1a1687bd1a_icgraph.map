@@ -1,0 +1,5 @@
+<map id="adf7030_1__SPI_wr_word_b_a" name="adf7030_1__SPI_wr_word_b_a">
+<area shape="rect" id="node2" href="$group__adf7030-1____irq.html#gaaed0814ca68c9ba108be76bb80534a8b" title="Clear the PHY eIntPin interrupt pin. " alt="" coords="252,5,431,32"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____irq.html#ga50f543aaabdfb310c0c49fbc943bf9a8" title="Configures the PHY interrupt source mask register. " alt="" coords="257,56,426,83"/>
+<area shape="rect" id="node4" href="$group__adf7030-1____patch.html#gace0ef57f36104ac9dedae1ddd016ce85" title="Function call to setup the patch. " alt="" coords="260,107,423,133"/>
+</map>

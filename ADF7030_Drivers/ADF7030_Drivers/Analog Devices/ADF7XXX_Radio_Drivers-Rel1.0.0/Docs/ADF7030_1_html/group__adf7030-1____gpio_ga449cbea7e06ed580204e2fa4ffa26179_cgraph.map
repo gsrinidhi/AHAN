@@ -1,0 +1,4 @@
+<map id="adf7030_1__GPIO_ClrPin" name="adf7030_1__GPIO_ClrPin">
+<area shape="rect" id="node2" href="$group__adf7030-1____mem.html#ga5e53a55534a1aada085fb548ba2340d3" title="Write a single 32bits memory location via the SPI. " alt="" coords="223,5,409,32"/>
+<area shape="rect" id="node3" href="$group__adf7030-1____mem.html#ga7dacc77a0474b14d4e15e12bfc1a46d7" title="Writes &quot;nbBytes&quot; memory location via the SPI. " alt="" coords="457,5,635,32"/>
+</map>

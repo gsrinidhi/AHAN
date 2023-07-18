@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<iarUserArgVars>
+  <group active="true" name="BSP">
+    <variable>
+      <name>BSP_DIR</name>
+      <value>C:\Analog Devices\ADuCM302x\ADuCM302x_EZ_Kit_Lite</value>
+    </variable>
+  </group>
+</iarUserArgVars>
+
+

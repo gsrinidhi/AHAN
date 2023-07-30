@@ -18,6 +18,7 @@ uint8_t config_adf7030(uint32_t size) {
 
     uint32_t array_position = 0;
     
+    ADF_SPI_SLAVE_SELECT(&ADF_SPI_INSTANCE,ADF_SPI_SLAVE);
     do 
     { 
       // Calculate the number of bytes to write
@@ -36,13 +37,30 @@ uint8_t config_adf7030(uint32_t size) {
       // Transfer the Configuration sequence
       ADF_SPI_TRANSFER_BLOCK(&ADF_SPI_INSTANCE,pSeqData,(length - 4),0,0);
       
+      
       // Update the array position to point to the next block
       array_position += length;
     
     }while(array_position < size); // Continue operation until full data file has been written
+    ADF_SPI_SLAVE_CLEAR(&ADF_SPI_INSTANCE,ADF_SPI_SLAVE);
     return 0;
 
 #else
 
 #endif
+}
+
+uint8_t adf_write_to_memory(uint8_t mode,uint32_t addr,uint8_t *data,uint32_t size) {
+    //Currently implementing mode1 for testing. Need to implement other modes
+    if((mode & WMODE_1) == WMODE_1){
+        uint8_t cmd_data[] = {mode,(addr >> 24),((addr >> 16) | 0xFF),((addr >> 8) | 0xFF),(addr | 0xFF )};
+        ADF_SPI_SLAVE_SELECT(&ADF_SPI_INSTANCE,ADF_SPI_SLAVE);
+        ADF_SPI_TRANSFER_BLOCK(&ADF_SPI_INSTANCE,cmd_data,5,0,0);
+        ADF_SPI_TRANSFER_BLOCK(&ADF_SPI_INSTANCE,data,size,0,0);
+        ADF_SPI_SLAVE_CLEAR(&ADF_SPI_INSTANCE,ADF_SPI_SLAVE);
+    }
+
+    return 0;
+    
+
 }

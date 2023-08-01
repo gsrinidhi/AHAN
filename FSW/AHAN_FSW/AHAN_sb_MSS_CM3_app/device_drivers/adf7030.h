@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <drivers/CoreSPI/core_spi.h>
 //Code to prevent error squiggles when not using smartfusion2 libraries. Set to zero when running on smartfusion2
-#define NO_CROSS_COMPILE 1
+#define NO_CROSS_COMPILE 0
 #if NO_CROSS_COMPILE == 1
 int a;
 #define g_core_spi0 a

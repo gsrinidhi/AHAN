@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "mss_gpio.h": "c",
+        "pilot_hw_platform.h": "c",
+        "mss_timer.h": "c",
+        "master.h": "c",
+        "test.h": "c",
+        "peripherals.h": "c",
+        "cli.h": "c",
+        "core_spi.h": "c"
+    }
+}

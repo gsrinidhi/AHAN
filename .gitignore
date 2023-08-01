@@ -1,0 +1,6 @@
+FSW/testing/PiLOT_sb_MSS_CM3_hw_platform/Debug/CMSIS/startup_gcc/newlib_stubs.o
+*.o
+*.d
+*.mk
+*.srec
+*.a

@@ -1,0 +1,44 @@
+This git hub repositary contains Flight Software being developed by students in IIST
+under SSPACE Lab. AHAN and PiLOT are the flagships missions for which the 
+Flight software is being developed. It is a Bare Metal technique of coding which will be
+deployed on ARM based Microsemi Smart Fusion 2 processor.
+
+PiLOT
+Requirements
+The following tasks need to be performed by the on-board computer of PiLOT:
+1. Collect thermistor data from the sensor board
+2. Collect ARIS data from ARIS
+3. Provide data to PSLV Stage 4
+4. Dump data to SD card when required
+5. Read from SD card when required
+6. Collect housekeeping data
+
+
+Theory of Operation
+The flight software for PiLOT is a bare metal while loop implementaion. On startup, all the peripherals are initialised and then an infinite loop begins. Each requirement is fulfilled in the form of a task. All tasks are periodic. To implement periodic tasks, the 64 bit timer is used. The 64 bit timer has two internal counters, lower and upper, each of 32 bits. All operations of the 64 bit timer are done using the upper and lower counts. Before the loop, the counter is initialised to its maximum value, 0xFFFFFFFF for both upper and lower counts. Each task has two sets of 64 bit counters: task_period_H, task_period_L, and task_last_count_H, task_last_count_L. The period counters store the period of the task, while the last_count counters store the 64 bit counter values of the last time the task was executed. At the beginning of every loop, the current values of the 64 bit counter are obtained. If the difference between the current count and last count is greater than the period of a task, then the task is executed. All data collected from any task is packetised and either added to the queue or written to the SD card, depending on the number of bytes free in the queue.
+
+Interfacing with the PSLV Stage 4:
+Communication with the PSLV stage 4 is performed using the RS485 standard. The OBC provides a UART output, which is converted to RS485 by the PSLV interface board. The PSLV stage 4 sends a single byte of address, to which we should respond with 2 bytes of data. All data collected from different sources is put in a queue, from which data is given to the PSLV stage 4, two bytes at a time, in the UART interrupt handler. Each time a byte is recieved, the UART interrupt handler is triggered. In the interrupt handler, the recieved byte is compared with the address of PiLOT alloted by PSLV. If they are matching, first the transmit enable pin is set high to enable transmission, and then two bytes of data are sent from the queue, and then the transmit enable pin is set low.
+
+SD Card management:
+The SD card is written to and read from in the form of blocks of 512 bytes. Each packet is stored in a single block irrespective of its size. No packet is larger than 512 bytes. 
+Data generated belong to one of the following classes:
+1. Payload thermistor data
+2. ARIS data
+3. Housekeeping data
+4. Log data
+5. SD card testing data
+Each class has a number of blocks in the SD card alloted to it. These allocations are referred to as partitions. Each partition has a start block, end block, write pointer and read pointer. Each class of data is assigned a partition.
+
+Note:
+1. The pslv interface board converts uart from OBC to the RS485 standard required for the PSLV. This mechanism inverts the rx line, but does not invert the tx and EN_TX lines. To take this into account the uart tx, rx and EN_TX lines are connected to three separate XOR gates. Each XOR gate has two inputs: A and B. The tx,rx and EN_TX lines are connected to the A inputs of their XOR gates. The EN_TX_INV is connected to the B input of the tx and EN_TX XOR gates. The EN_RX_INV is connected to the B input of the rx XOR gate. We can change the inverting configuration of the tx,rx and EN_TX lines by setting the EN_TX_INV and EN_RX_INV appropriately
+2. The data collected from the ADC, IMU and VC sensors is directly downlinked to the ground station. The conversion from the raw data to the required values are done by the ground software.
+3. SD card states:
+a) 0x7: the SD card is working properly
+b) 0x8: the SD card has been switched off recently
+c) 0x9: the SD card is not operational
+d) 0x0: failed regular operation. waiting to be tested
+Any SD card operation takes comparitively longer duration than other tasks. Hence the SD card operations including checking for operational status have large time periods. The state 0x8 indicates that an SD card operation has been performed recently. Once a failure is detected, the SD card is switched off and restarted after a certain time period. 
+
+
+

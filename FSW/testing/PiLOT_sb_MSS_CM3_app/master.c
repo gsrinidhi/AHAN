@@ -22,8 +22,8 @@ void GPIO_Init() {
 void SPI_Init() {
 	MSS_SPI_init(&g_mss_spi1);
 	MSS_SPI_configure_master_mode(&g_mss_spi1, MSS_SPI_SLAVE_0, MSS_SPI_MODE0, 512, 8);
-	SPI_init(&g_core_spi0,CORESPI_0_0,8);
-	SPI_configure_master_mode(&g_core_spi0);
+	SPI_init(&g_core_spi0,CORESPI_0_0,SPI_MODE_MASTER,SPI_MODE0,PCLK_DIV_256);
+	SPI_set_order(&g_core_spi0,SPI_MSB_FIRST);
 }
 
 void Uart_Init() {

@@ -48,7 +48,7 @@ i2c_status_t core_i2c_status;
 timer_instance_t sd_timer;
 
 //Core SPI instance
-spi_instance_t g_core_spi0;
+SPI_instance_t g_core_spi0;
 #define SD_TIMER_BASE_ADDR	0x5000B000
 
 #define i2c_3 g_core_i2c1//

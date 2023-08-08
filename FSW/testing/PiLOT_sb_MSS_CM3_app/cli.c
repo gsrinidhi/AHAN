@@ -118,6 +118,9 @@ void cli_init(){
 	add_command("vc_test_i\0",read_vc_sensor_i,"VC current test done");
 	add_command("adc_test\0", adc_test, "ADC_test done");
 	add_command("thermistor_calib\0", thermistor_calib, "Thermistor_calib done");
+	add_command("adf_init\0",adf_init,"ADF Initialised");
+	add_command("adf_mem_write\0",adf_mem_write,"Written to ADF memory");
+	add_command("adf_mem_read\0",adf_mem_read,"Read from ADF memory");
 	MSS_UART_polled_tx_string(&g_mss_uart0,prompt_msg);
 
 }

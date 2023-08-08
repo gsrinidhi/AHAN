@@ -9,6 +9,7 @@
 #include "pslv_interface.h"
 #include "ccsds.h"
 #include "SD.h"
+#include "device_drivers/adf7030.h"
 
 #define VAL 0
 #define COMMAND_FLAG 0

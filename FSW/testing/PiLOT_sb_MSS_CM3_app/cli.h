@@ -44,6 +44,24 @@ void read_vc_sensor_i(char *data,uint8_t size);
 void adc_test(char *data,uint8_t size);
 void argu_to_i2cargu(char *argu,i2c_argu_t * i2c);
 void thermistor_calib(char *data,uint8_t size);
+void adf_init(char *data, uint8_t size);
+
+/**
+ * Command to write to adf memory
+ * example:
+ * adf_mem_write 20004004 00001B1B
+ * the first parameter is the address, the second parameter is the data to be written
+ * Note: The addressess should be word aligned(Multiple of 4). Also make sure that eight digits are given
+ * for both data and address. Fill extra digits with zeros
+ */
+void adf_mem_write(char *data, uint8_t size);
+
+/**
+ * Command to read from adf memory
+ * example: adf_mem_read 20004004
+ * the first parameter is the address. It should be word aligned
+ */
+void adf_mem_read(char *data,uint8_t size);
  char c[25];
  char argu[25];
 

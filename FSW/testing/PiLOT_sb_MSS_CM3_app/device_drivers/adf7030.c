@@ -7,8 +7,8 @@ void set_adf_spi_instance(ADF_SPI_INSTANCE_t *instance) {
 }
 uint8_t radio_memory_configuration[ ] = {
     #include "Settings_adf7030.txt"
-    //The below 0x00 is included because an "expected expression" error occurs if its deleted. Need to find out why?
-    0x00
+//    //The below 0x00 is included because an "expected expression" error occurs if its deleted. Need to find out why?
+//    0x00
 };
 
 //variable to store the length of radio_memory_configuration array

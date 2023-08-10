@@ -121,6 +121,7 @@ void cli_init(){
 	add_command("adf_init\0",adf_init,"ADF Initialised");
 	add_command("adf_mem_write\0",adf_mem_write,"Written to ADF memory");
 	add_command("adf_mem_read\0",adf_mem_read,"Read from ADF memory");
+	add_command("core_spi_test\0",core_spi_test,"Tested Core spi");
 	MSS_UART_polled_tx_string(&g_mss_uart0,prompt_msg);
 
 }

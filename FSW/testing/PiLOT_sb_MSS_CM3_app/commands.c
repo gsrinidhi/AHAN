@@ -682,6 +682,25 @@ void adf_mem_read(char *data,uint8_t size) {
 	print_num("Data: \0",rdata);
 }
 
+void core_spi_test(char *data, uint8_t size) {
+	uint8_t spi_flag = 0,rx_value,tx_buffer,rx_buffer;
+	void core_spi_uart_handler(mss_uart_instance_t* this_uart) {
+		MSS_UART_get_rx(&g_mss_uart0,&rx_value,1);
+		spi_flag = 1;
+	}
+	echo_str("Transmitting SPI");
+	MSS_UART_set_rx_handler(&g_mss_uart0,core_spi_uart_handler,MSS_UART_FIFO_SINGLE_BYTE);
+	ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
+	while(1) {
+		ADF_SPI_TRANSFER_FRAME(adf_spi,tx_buffer,rx_buffer,1);
+		if(spi_flag == 1) {
+			break;
+		}
+	}
+	ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
+
+}
+
 
 
 

@@ -45,6 +45,7 @@ void adc_test(char *data,uint8_t size);
 void argu_to_i2cargu(char *argu,i2c_argu_t * i2c);
 void thermistor_calib(char *data,uint8_t size);
 void adf_init(char *data, uint8_t size);
+void core_spi_test(char *data, uint8_t size);
 
 /**
  * Command to write to adf memory

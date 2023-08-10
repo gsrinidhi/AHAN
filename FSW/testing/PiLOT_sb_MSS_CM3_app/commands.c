@@ -610,35 +610,38 @@ void thermistor_calib_auto(char *data,uint8_t size) {
 void adf_init(char *data, uint8_t size) {
 	
 	uint32_t before = 0xFFFFFFFF,current,limit;
-	uint8_t flag = 0,rx_data;
+	uint8_t buf=0, count=0;
+	uint8_t flag = 0,rx_data =0;
 	//Set limit as a multiple of 100us
 	limit = (data[0] - 48) * 100;
 	limit = limit * MSS_SYS_M3_CLK_FREQ / 1000000;
 	//Timer to check if MISO is reacting on time. Typical delay bw #CS Low and MISO high is 92us from datasheet. Here 
-	TMR_init(&timer,CORETIMER_0_0,TMR_ONE_SHOT_MODE,PRESCALER_DIV_2,before);
+//	TMR_init(&timer,CORETIMER_0_0,TMR_ONE_SHOT_MODE,PRESCALER_DIV_2,before);
 
 	//Set the adf spi as g_core_spi0
-	set_adf_spi_instance(&g_core_spi0);
+//	set_adf_spi_instance(&g_core_spi0);
 
 	//Start timer
-	TMR_start(&timer);
+//	TMR_start(&timer);
 
 	//Bring #CS Low by selecting the slave
-	ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
+	SPI_slave_select(&g_core_spi0, SPI_SLAVE_0);
 
 	//Now we have to wait until MISO goes high, i.e some non zero data is obtained from the ADF
 	do {
-		ADF_SPI_TRANSFER_FRAME(adf_spi,0,&rx_data,1);
-		current = TMR_current_value(&timer);
-		if((before - current) > limit) {
-			flag = 1;
-			break;
-		}
-	}while(rx_data == 0);
+
+		SPI_transfer(&g_core_spi0, &buf, &rx_data,1);
+//		current = TMR_current_value(&timer);
+//		if((before - current) > limit) {
+//			flag = 1;
+//			break;
+		count++;
+//		}
+	}while(rx_data == 0 && count<10);
 
 	//Pull #CS high again
-	ADF_SPI_SLAVE_CLEAR(adf_spi,0);
-	TMR_stop(&timer);
+	SPI_slave_select(&g_core_spi0, 0);
+//	TMR_stop(&timer);
 	if(flag) {
 		echo_str("ADF not waking up. Aborting initialisation\0");
 	} 
@@ -653,28 +656,35 @@ void adf_init(char *data, uint8_t size) {
 void adf_mem_write(char *data, uint8_t size) {
 	uint32_t addr = 0,wr_data = 0;
 	uint8_t i = 0;
-	while(i++<8) {
-		addr = addr * 10 + (data[i] - 48);
-	}
+//	while(i<8) {
+//		addr = addr * 10 + (data[i] - 48);
+//		i++;
+//	}
+	addr = 0x20000394;
 	i = 9;
-	while(i++<17) {
-		wr_data = wr_data * 10 + (data[i] - 48);
-	}
-
+//	while(i<17) {
+//		wr_data = wr_data * 10 + (data[i] - 48);
+//		i++;
+//	}
+	data = 0x1b1A1918;
+	set_adf_spi_instance(&g_core_spi0);
 	adf_write_to_memory(WMODE_1,addr,(uint8_t*)&wr_data,4);
 
 	echo_str("Written to ADF memory\n\0");
-	print_num("Address: \0",addr);
+	print_num("Address: \0",(double) addr);
 	print_num("Data: \0",wr_data);
 }
 
 void adf_mem_read(char *data,uint8_t size) {
 	uint32_t addr = 0,rdata;
 	uint8_t i = 0,r_data[6],*r_data_p;
-	while(i++<8) {
-		addr = addr * 10 + (data[i] - 48);
-	}
+//	while(i<8) {
+//		addr = addr * 10 + (data[i] - 48);
+//		i++;
+//	}
+	addr = 0x20000394;
 
+	set_adf_spi_instance(&g_core_spi0);
 	r_data_p = adf_read_from_memory(RMODE_1,addr,r_data,4);
 	rdata = (r_data[2] << 24) | (r_data[3] << 16) | (r_data[4] << 8) | r_data[5];
 	echo_str("Read from ADF memory\n\0");
@@ -683,22 +693,22 @@ void adf_mem_read(char *data,uint8_t size) {
 }
 
 void core_spi_test(char *data, uint8_t size) {
-	uint8_t spi_flag = 0,rx_value,tx_buffer,rx_buffer;
+	uint8_t spi_flag = 0,tx_buffer = 0xaa, rx_value, rx_buffer;
 	void core_spi_uart_handler(mss_uart_instance_t* this_uart) {
 		MSS_UART_get_rx(&g_mss_uart0,&rx_value,1);
 		spi_flag = 1;
 	}
 	echo_str("Transmitting SPI");
 	MSS_UART_set_rx_handler(&g_mss_uart0,core_spi_uart_handler,MSS_UART_FIFO_SINGLE_BYTE);
-	ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
+	SPI_slave_select(&g_core_spi0, SPI_SLAVE_0);
 	while(1) {
-		ADF_SPI_TRANSFER_FRAME(adf_spi,tx_buffer,rx_buffer,1);
+		SPI_transfer(&g_core_spi0,&tx_buffer,&rx_buffer,1);
 		if(spi_flag == 1) {
 			break;
 		}
 	}
-	ADF_SPI_SLAVE_SELECT(adf_spi,0);
-
+	SPI_slave_select(&g_core_spi0, 0);
+	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
 }
 
 

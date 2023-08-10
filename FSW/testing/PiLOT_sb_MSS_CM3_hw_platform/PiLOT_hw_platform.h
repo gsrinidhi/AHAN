@@ -17,13 +17,13 @@
 #define COREI2C_3_0                     0x50003000U
 #define COREI2C_4_0                     0x50004000U
 #define COREI2C_5_0                     0x50005000U
-#define COREGPIO_0_0                    0x50006000U
+//#define COREGPIO_0_0                    0x50006000U
 #define COREUARTAPB_1_0                 0x50007000U
 #define COREUARTAPB_2_0                 0x50008000U
 #define COREUARTAPB_3_0                 0x50009000U
 #define CORETIMER_0_0					0x5000A000U
 #define CORETIMER_1_0					0x5000B000U
 #define CORETIMER_2_0					0x5000C000U
-#define CORESPI_0_0                     0x5000D000U
+#define CORESPI_0_0                     0x50006000U
 
 #endif /* AHAN_HW_PLATFORM_H_*/

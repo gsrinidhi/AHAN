@@ -697,7 +697,7 @@ void core_spi_test(char *data, uint8_t size) {
 			break;
 		}
 	}
-	ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
+	ADF_SPI_SLAVE_SELECT(adf_spi,0);
 
 }
 

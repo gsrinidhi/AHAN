@@ -613,83 +613,183 @@ void adf_init(char *data, uint8_t size) {
 	uint8_t buf=0, count=0;
 	uint8_t flag = 0,rx_data =0;
 	//Set limit as a multiple of 100us
-	limit = (data[0] - 48) * 100;
-	limit = limit * MSS_SYS_M3_CLK_FREQ / 1000000;
+	// limit = (data[0] - 48) * 100;
+	// limit = limit * MSS_SYS_M3_CLK_FREQ / 1000000;
 	//Timer to check if MISO is reacting on time. Typical delay bw #CS Low and MISO high is 92us from datasheet. Here 
 //	TMR_init(&timer,CORETIMER_0_0,TMR_ONE_SHOT_MODE,PRESCALER_DIV_2,before);
 
 	//Set the adf spi as g_core_spi0
-//	set_adf_spi_instance(&g_core_spi0);
+	set_adf_spi_instance(&g_core_spi0);
 
 	//Start timer
 //	TMR_start(&timer);
 
 	//Bring #CS Low by selecting the slave
-	SPI_slave_select(&g_core_spi0, SPI_SLAVE_0);
+	ADF_SPI_SLAVE_SELECT(adf_spi, ADF_SPI_SLAVE);
 
 	//Now we have to wait until MISO goes high, i.e some non zero data is obtained from the ADF
 	do {
 
-		SPI_transfer(&g_core_spi0, &buf, &rx_data,1);
-//		current = TMR_current_value(&timer);
-//		if((before - current) > limit) {
-//			flag = 1;
-//			break;
+		ADF_SPI_READ_BYTE(adf_spi, &rx_data);
+		if(rx_data) {
+			flag = 0;
+			break;
+		}
+		// current = TMR_current_value(&timer);
+		// if((before - current) > limit) {
+		// 	flag = 1;
+		// 	break;
 		count++;
-//		}
-	}while(rx_data == 0 && count<10);
+		// }
+	}while(count<10);
 
 	//Pull #CS high again
-	SPI_slave_select(&g_core_spi0, 0);
+	ADF_SPI_SLAVE_SELECT(adf_spi, 0);
 //	TMR_stop(&timer);
 	if(flag) {
-		echo_str("ADF not waking up. Aborting initialisation\0");
+		echo_str("\n\rADF not waking up. Aborting initialisation\0");
+		return;
 	} 
+
+	echo_str("\n\rADF Woken up\0");
 
 	//Call adf_config to configure the ADF
 
-	config_adf7030();
+	count = config_adf7030();
+	if(!count) {
+		echo_str("\n\rADF Configured successfully");
+	} else {
+		print_num("\n\rADF Config failed with error code: ",count);
+	}
 
 	//Write drivers for callibration using firmware module files
 }
 
 void adf_mem_write(char *data, uint8_t size) {
 	uint32_t addr = 0,wr_data = 0;
-	uint8_t i = 0;
-//	while(i<8) {
-//		addr = addr * 10 + (data[i] - 48);
-//		i++;
-//	}
-	addr = 0x20000394;
+	uint8_t i = 0,mod = 1,rem = 1;
+	uint8_t op_addr[9],op_data[9];
+	while(i<8) {
+		if(data[i] >='0' && data[i] <='9'){
+			mod = data[i] - 48;
+		}else if(data[i] >= 'A' && data[i] < 'F') {
+			mod = data[i] - 55;
+		}else if(data[i] >='a' && data[i] <= 'f') {
+			mod = data[i] - 'a' + 10;
+		}else {
+			echo_str("Invalid address");
+			return;
+		}
+		addr = addr * 16 + mod;\
+		i++;
+	}
+	// addr = 0x20000394;
 	i = 9;
-//	while(i<17) {
-//		wr_data = wr_data * 10 + (data[i] - 48);
-//		i++;
-//	}
+	while(i<8) {
+		if(data[i] >='0' && data[i] <='9'){
+			mod = data[i] - 48;
+		}else if(data[i] >= 'A' && data[i] < 'F') {
+			mod = data[i] - 55;
+		}else if(data[i] >='a' && data[i] <= 'f') {
+			mod = data[i] - 'a' + 10;
+		}else {
+			echo_str("Invalid address");
+			return;
+		}
+		wr_data = wr_data * 16 + mod;
+		i++;
+	}
 	data = 0x1b1A1918;
 	set_adf_spi_instance(&g_core_spi0);
 	adf_write_to_memory(WMODE_1,addr,(uint8_t*)&wr_data,4);
-
+	i = 7;
+	while(addr) {
+		rem = addr%16;
+		if(rem<10) {
+			op_addr[i] = rem + '0';
+		} else {
+			op_addr[i] = rem + 'A' - 10;
+		}
+		i--;
+		addr/=16;
+	}
+	op_addr[8] = '\0';
+	i = 7;
+	while(wr_data) {
+		rem = wr_data%16;
+		if(rem<10) {
+			op_data[i] = rem + '0';
+		} else {
+			op_data[i] = rem + 'A' - 10;
+		}
+		i--;
+		wr_data/=16;
+	}
+	op_data[8] = '\0';
 	echo_str("Written to ADF memory\n\0");
-	print_num("Address: \0",(double) addr);
-	print_num("Data: \0",wr_data);
+	echo_str("Address: \0");
+	echo_str(op_addr);
+	echo_str("\n\r\0");
+	echo_str("Data: \0");
+	echo_str(op_data);
+	echo_str("\n\r\0");
 }
 
 void adf_mem_read(char *data,uint8_t size) {
 	uint32_t addr = 0,rdata;
 	uint8_t i = 0,r_data[6],*r_data_p;
-//	while(i<8) {
-//		addr = addr * 10 + (data[i] - 48);
-//		i++;
-//	}
-	addr = 0x20000394;
+	uint8_t mod = 1,rem = 1;
+	uint8_t op_addr[9] = "00000000\0",op_data[9] = "00000000\0";
+	while(i<8) {
+		if(data[i] >='0' && data[i] <='9'){
+			mod = data[i] - 48;
+		}else if(data[i] >= 'A' && data[i] < 'F') {
+			mod = data[i] - 55;
+		}else if(data[i] >='a' && data[i] <= 'f') {
+			mod = data[i] - 'a' + 10;
+		}else {
+			echo_str("Invalid address");
+			return;
+		}
+		addr = addr * 16 + mod;
+		i++;
+	}
+	// addr = 0x20000394;
 
 	set_adf_spi_instance(&g_core_spi0);
 	r_data_p = adf_read_from_memory(RMODE_1,addr,r_data,4);
 	rdata = (r_data[2] << 24) | (r_data[3] << 16) | (r_data[4] << 8) | r_data[5];
+	i = 7;
+	while(addr) {
+		rem = addr%16;
+		if(rem<10) {
+			op_addr[i] = rem + '0';
+		} else {
+			op_addr[i] = rem + 'A' - 10;
+		}
+		i--;
+		addr/=16;
+	}
+	op_addr[8] = '\0';
+	i = 7;
+	while(rdata) {
+		rem = rdata%16;
+		if(rem<10) {
+			op_data[i] = rem + '0';
+		} else {
+			op_data[i] = rem + 'A' - 10;
+		}
+		i--;
+		rdata/=16;
+	}
+	op_data[8] = '\0';
 	echo_str("Read from ADF memory\n\0");
-	print_num("Address: \0",addr);
-	print_num("Data: \0",rdata);
+	echo_str("Address: \0");
+	echo_str(op_addr);
+	echo_str("\n\r\0");
+	echo_str("Data: \0");
+	echo_str(op_data);
+	echo_str("\n\r\0");
 }
 
 void core_spi_test(char *data, uint8_t size) {
@@ -708,6 +808,23 @@ void core_spi_test(char *data, uint8_t size) {
 		}
 	}
 	SPI_slave_select(&g_core_spi0, 0);
+	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
+}
+
+void check_read_from_memory(char *data,uint8_t size) {
+	uint8_t spi_flag = 0,tx_buffer = 0xaa, rx_value, rx_buffer;
+	void core_spi_uart_handler(mss_uart_instance_t* this_uart) {
+		MSS_UART_get_rx(&g_mss_uart0,&rx_value,1);
+		spi_flag = 1;
+	}
+	echo_str("Transmitting SPI");
+	MSS_UART_set_rx_handler(&g_mss_uart0,core_spi_uart_handler,MSS_UART_FIFO_SINGLE_BYTE);
+	while(1) {
+		adf_read_from_memory(RMODE_1,0x2000063c,&rx_buffer,1);
+		if(spi_flag == 1) {
+			break;
+		}
+	}
 	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
 }
 

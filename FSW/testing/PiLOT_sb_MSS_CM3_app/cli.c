@@ -105,23 +105,24 @@ void cli_init(){
 	val = 0;
 	cmd_in = 0;
 	add_command("setbaudrate\0",set_baud_rate,"\n\rbaud rate set\0");
-	add_command("view_thermistor\0",get_ADC_correct_values,"\n\rThermistor values displayed\0");
+	// add_command("view_thermistor\0",get_ADC_correct_values,"\n\rThermistor values displayed\0");
 	add_command("disp_acc\0",get_imu_acc,"\n\rAcc displayed\0");
 	add_command("disp_gyro\0",get_imu_gyro,"\n\rGyro displayed\0");
 	add_command("I2C_TEST\0",i2c_test_cmd,"\n\rI2C Test Done");
 	add_command("echo\0",echo,"\n\r");
-	add_command("sd_test\0",sd_test,"SD test done");
-	add_command("i2c_sigcheck\0",i2c_signal_check,"I2C Signal transmitted");
+	// add_command("sd_test\0",sd_test,"SD test done");
+	// add_command("i2c_sigcheck\0",i2c_signal_check,"I2C Signal transmitted");
 	add_command("reset\0",test_reset,"Performed Reset");
-	add_command("rs485_test\0",rs485_tx_test,"RS485 tx complete");
-	add_command("vc_test_v\0",read_vc_sensor,"VC voltage test done");
-	add_command("vc_test_i\0",read_vc_sensor_i,"VC current test done");
-	add_command("adc_test\0", adc_test, "ADC_test done");
-	add_command("thermistor_calib\0", thermistor_calib, "Thermistor_calib done");
+	// add_command("rs485_test\0",rs485_tx_test,"RS485 tx complete");
+	// add_command("vc_test_v\0",read_vc_sensor,"VC voltage test done");
+	// add_command("vc_test_i\0",read_vc_sensor_i,"VC current test done");
+	// add_command("adc_test\0", adc_test, "ADC_test done");
+	// add_command("thermistor_calib\0", thermistor_calib, "Thermistor_calib done");
 	add_command("adf_init\0",adf_init,"ADF Initialised");
 	add_command("adf_mem_write\0",adf_mem_write,"Written to ADF memory");
 	add_command("adf_mem_read\0",adf_mem_read,"Read from ADF memory");
 	add_command("core_spi_test\0",core_spi_test,"Tested Core spi");
+	add_command("check_adf_spi_read\0",check_read_from_memory,"Tested adf_read_from_memory");
 	MSS_UART_polled_tx_string(&g_mss_uart0,prompt_msg);
 
 }

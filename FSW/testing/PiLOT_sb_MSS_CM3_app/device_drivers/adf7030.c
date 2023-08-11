@@ -34,14 +34,14 @@ uint8_t config_adf7030() {
       
       if(length > 0xFFFF)
       {
-         return 1;
+         return ERR_LENGTH_OVERFLOW;
       } 
       
       // Write the SPI data pointed to location (MEMORY_FILE + array_position) with specified length (length)
       uint8_t * pSeqData = (radio_memory_configuration + array_position + 3);
       
       // Transfer the Configuration sequence
-      ADF_SPI_TRANSFER_BLOCK(adf_spi,pSeqData,0,(length - 4));
+      ADF_SPI_BLOCK_WRITE(adf_spi,pSeqData,1,(pSeqData+1),(length-4));
       
       
       // Update the array position to point to the next block
@@ -50,9 +50,9 @@ uint8_t config_adf7030() {
     }while(array_position < size); // Continue operation until full data file has been written
 
     //Send command to apply the configuration
-    adf_send_cmd(CMD_CFG_DEV);
+    array_position = adf_send_cmd(CMD_CFG_DEV);
     ADF_SPI_SLAVE_CLEAR(adf_spi,0);
-    return 0;
+    return array_position;
 
 #else
 
@@ -62,10 +62,9 @@ uint8_t config_adf7030() {
 uint8_t adf_write_to_memory(uint8_t mode,uint32_t addr,uint8_t *data,uint32_t size) {
     //Currently implementing mode1 for testing. Need to implement other modes
     if((mode & WMODE_1) == WMODE_1){
-        uint8_t cmd_data[] = {mode,(addr >> 24),((addr >> 16) | 0xFF),((addr >> 8) | 0xFF),(addr | 0xFF )};
+        uint8_t cmd_data[] = {mode,(addr >> 24),((addr >> 16) & 0xFF),((addr >> 8) & 0xFF),(addr & 0xFF )};
         ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
-        ADF_SPI_TRANSFER_BLOCK(adf_spi,cmd_data,0,5);
-        ADF_SPI_TRANSFER_BLOCK(adf_spi,data,0,size);
+        ADF_SPI_BLOCK_WRITE(adf_spi,cmd_data,5,data,size);
         ADF_SPI_SLAVE_CLEAR(adf_spi,0);
     }
 
@@ -75,11 +74,10 @@ uint8_t adf_write_to_memory(uint8_t mode,uint32_t addr,uint8_t *data,uint32_t si
 }
 
 uint8_t* adf_read_from_memory(uint8_t mode,uint32_t addr,uint8_t *data,uint32_t size) {
-    if((mode & WMODE_1) == WMODE_1){
-        uint8_t cmd_data[] = {mode,(addr >> 24),((addr >> 16) | 0xFF),((addr >> 8) | 0xFF),(addr | 0xFF )};
+    if((mode & RMODE_1) == RMODE_1){
+        uint8_t cmd_data[] = {mode,(addr >> 24),((addr >> 16) & 0xFF),((addr >> 8) & 0xFF),(addr & 0xFF )};
         ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
-        ADF_SPI_TRANSFER_BLOCK(adf_spi,cmd_data,0,5);
-        ADF_SPI_TRANSFER_BLOCK(adf_spi,0,data,size+RMODE1_OFFSET);
+        ADF_SPI_BLOCK_READ(adf_spi,cmd_data,5,data,size+RMODE1_OFFSET);
         ADF_SPI_SLAVE_CLEAR(adf_spi,0);
     }
     return (data+RMODE1_OFFSET);
@@ -87,11 +85,11 @@ uint8_t* adf_read_from_memory(uint8_t mode,uint32_t addr,uint8_t *data,uint32_t 
 
 uint8_t adf_send_cmd(uint8_t command) {
     ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
-    uint32_t check_val = 0;
+    uint8_t check_val = 0,nop = ADF_NOP;
     uint8_t tries = 0;
     //Send NOP command(0xFF) until adf is ready to receive command
     do {
-        check_val = ADF_SPI_TRANSFER_FRAME(adf_spi,ADF_NOP,0,1);
+        ADF_SPI_BLOCK_READ(adf_spi,&nop,1,&check_val,1);
         if((check_val & CMD_READY) != 0) {
             break;
         }
@@ -101,7 +99,7 @@ uint8_t adf_send_cmd(uint8_t command) {
     }
 
     //Send the command
-    ADF_SPI_TRANSFER_FRAME(adf_spi,command,0,1);
+    ADF_SPI_WRITE_BYTE(adf_spi,&command);
 
     return 0;
 

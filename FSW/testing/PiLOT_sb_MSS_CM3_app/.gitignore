@@ -46,3 +46,4 @@ Release/makefile
 *.mk
 Release/memory-map.xml
 Release/
+.metadata/

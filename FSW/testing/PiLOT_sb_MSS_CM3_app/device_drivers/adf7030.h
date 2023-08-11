@@ -31,6 +31,18 @@ extern ADF_SPI_INSTANCE_t *adf_spi;
 //Set the slave cooresponding to ADF
 #define ADF_SPI_SLAVE           SPI_SLAVE_0
 
+//Set the block read command
+#define ADF_SPI_BLOCK_READ      SPI_block_read
+
+//Set the block write command
+#define ADF_SPI_BLOCK_WRITE     SPI_block_write
+
+//Set the single byte write command
+#define ADF_SPI_WRITE_BYTE      SPI_write_byte
+
+//Set the single byte read command
+#define ADF_SPI_READ_BYTE       SPI_read_byte
+
 //Not using DMA right now. Need to check if DMA can be used
 #define ADF_USE_PDMA 0
 
@@ -121,6 +133,10 @@ extern ADF_SPI_INSTANCE_t *adf_spi;
 #define CMD_READY           0x20 //To check if adf is ready to receive a command
 
 #define ADF_NOP             0xFF //NOP command
+
+//Macros to define errors
+#define ERR_LENGTH_OVERFLOW     0x1//Error when length overflows 0xFFFF in config_adf()
+#define ERR_CMD_FAILED          0x2//Error when send_cmd fails
 
 void set_adf_spi_instance(ADF_SPI_INSTANCE_t *instance);
 

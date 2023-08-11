@@ -63,6 +63,14 @@ void adf_mem_write(char *data, uint8_t size);
  * the first parameter is the address. It should be word aligned
  */
 void adf_mem_read(char *data,uint8_t size);
+
+/**
+ * @brief Command to check adf_read_from_memory. Calls the function in an infinite loop, which can be broken by hitting any key
+ * 
+ * @param data 
+ * @param size 
+ */
+void check_read_from_memory(char *data,uint8_t size);
  char c[25];
  char argu[25];
 

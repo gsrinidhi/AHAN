@@ -51,7 +51,7 @@ timer_instance_t sd_timer;
 SPI_instance_t g_core_spi0;
 #define SD_TIMER_BASE_ADDR	0x5000B000
 
-#define i2c_3 g_core_i2c1//
+#define i2c_3 g_core_i2c1
 #define i2c_5 g_core_i2c3
 
 #define I2C_SLAVE_ADDRESS 0x12
@@ -65,4 +65,5 @@ SPI_instance_t g_core_spi0;
 
 #define TIMER_COUNT_PER_MS 100000 //Number of counts in one millisecond 1t 100MHz
 #define FULL_SCALE_TIME_MS 42949 //Number of milliseconds for the 32 bit counter to completely countdown at 100MHz
+
 #endif

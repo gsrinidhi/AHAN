@@ -22,7 +22,7 @@ uint8_t config_adf7030() {
     //Not using PDMA
 #if ADF_USE_PDMA == 0
 
-    uint32_t array_position = 0;
+    uint32_t array_position = 0, i;
     
     ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
     do 
@@ -41,9 +41,14 @@ uint8_t config_adf7030() {
       uint8_t * pSeqData = (radio_memory_configuration + array_position + 3);
       
       // Transfer the Configuration sequence
+      MSS_GPIO_set_output(MSS_GPIO_3, 0);
       ADF_SPI_BLOCK_WRITE(adf_spi,pSeqData,1,(pSeqData+1),(length-4));
+      MSS_GPIO_set_output(MSS_GPIO_3, 1);
       
-      
+      for(i=0; i<1000; i++){
+
+      }
+
       // Update the array position to point to the next block
       array_position += length;
     
@@ -58,6 +63,7 @@ uint8_t config_adf7030() {
 
 #endif
 }
+
 
 uint8_t adf_write_to_memory(uint8_t mode,uint32_t addr,uint8_t *data,uint32_t size) {
     //Currently implementing mode1 for testing. Need to implement other modes
@@ -88,6 +94,27 @@ uint8_t adf_send_cmd(uint8_t command) {
     uint8_t check_val = 0,nop = ADF_NOP;
     uint8_t tries = 0;
     //Send NOP command(0xFF) until adf is ready to receive command
+//    do {
+//        ADF_SPI_BLOCK_READ(adf_spi,&nop,1,&check_val,1);
+//        if((check_val & CMD_READY) != 0) {
+//            break;
+//        }
+//    }while(tries++ < 100);
+//    if(tries >= 100) {
+//        return check_val;
+//    }
+
+    //Send the command
+    ADF_SPI_WRITE_BYTE(adf_spi,&command);
+
+    return 0;
+
+}
+
+uint8_t cmd_ready_set() {
+    uint8_t check_val = 0,nop = ADF_NOP;
+    uint8_t tries = 0;
+    //Send NOP command(0xFF) until adf is ready to receive command
     do {
         ADF_SPI_BLOCK_READ(adf_spi,&nop,1,&check_val,1);
         if((check_val & CMD_READY) != 0) {
@@ -97,10 +124,51 @@ uint8_t adf_send_cmd(uint8_t command) {
     if(tries >= 100) {
         return check_val;
     }
-
-    //Send the command
-    ADF_SPI_WRITE_BYTE(adf_spi,&command);
-
     return 0;
+}
 
+uint8_t adf_in_idle() {
+    uint8_t check_val = 0,nop = ADF_NOP;
+    uint8_t tries = 0;
+    //Send NOP command(0xFF) until adf is ready to receive command
+    do {
+        ADF_SPI_BLOCK_READ(adf_spi,&nop,1,&check_val,1);
+        if((check_val & 0x02) != 0) {
+            break;
+        }
+    }while(tries++ < 100);
+    if(tries >= 100) {
+        return check_val;
+    }
+    return 0;
+}
+
+void adf_spi_trans_read( SPI_instance_t * this_spi,
+    uint8_t * cmd_buffer,
+    size_t cmd_byte_size,
+    uint8_t * rd_buffer,
+    size_t rd_byte_size){
+
+	uint16_t i;
+	MSS_GPIO_set_output(MSS_GPIO_3, 0);
+	SPI_block_read(this_spi, cmd_buffer, cmd_byte_size, rd_buffer, rd_byte_size);
+	MSS_GPIO_set_output(MSS_GPIO_3, 1);
+	for(i=0;i<1000;i++){
+
+	}
+}
+
+void adf_spi_trans_write( SPI_instance_t * this_spi,
+	    uint8_t * cmd_buffer,
+	    size_t cmd_byte_size,
+	    uint8_t * wr_buffer,
+	    size_t wr_byte_size){
+
+	uint16_t i;
+	MSS_GPIO_set_output(MSS_GPIO_3, 0);
+	SPI_block_write(this_spi, cmd_buffer, cmd_byte_size, wr_buffer, wr_byte_size);
+	MSS_GPIO_set_output(MSS_GPIO_3, 1);
+	for(i=0;i<1000;i++){
+
+	}
 }

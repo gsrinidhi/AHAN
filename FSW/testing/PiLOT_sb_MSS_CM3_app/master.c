@@ -12,11 +12,12 @@ void I2C_Init() {
 
 void GPIO_Init() {
 	MSS_GPIO_init();
-	MSS_GPIO_config(EN_SENSOR_BOARD,MSS_GPIO_OUTPUT_MODE);
+	MSS_GPIO_config(ADF_RST,MSS_GPIO_OUTPUT_MODE);
 	MSS_GPIO_config(EN_UART,MSS_GPIO_OUTPUT_MODE);
 	MSS_GPIO_config( SD_CARD_GPIO , MSS_GPIO_OUTPUT_MODE );
 	MSS_GPIO_config( TX_INV_EN , MSS_GPIO_OUTPUT_MODE );
 	MSS_GPIO_config( RX_INV_EN , MSS_GPIO_OUTPUT_MODE );
+	MSS_GPIO_config(MSS_GPIO_3, MSS_GPIO_OUTPUT_MODE);
 }
 
 void SPI_Init() {
@@ -24,6 +25,8 @@ void SPI_Init() {
 	MSS_SPI_configure_master_mode(&g_mss_spi1, MSS_SPI_SLAVE_0, MSS_SPI_MODE0, 512, 8);
 	SPI_init(&g_core_spi0,CORESPI_0_0,SPI_MODE_MASTER,SPI_MODE0,PCLK_DIV_256);
 	SPI_set_order(&g_core_spi0,SPI_MSB_FIRST);
+	SPI_configure(&g_core_spi0, SPI_SLAVE_0, SPI_MODE0, PCLK_DIV_256, SPI_MSB_FIRST);
+	SPI_slave_select(&g_core_spi0, 0);
 }
 
 void Uart_Init() {
@@ -42,6 +45,8 @@ uint8_t Pilot_Peripherals_Init() {
 //	print_num("SD card init result \0",res);
 	MSS_GPIO_set_output(TX_INV_EN,0);
 	MSS_GPIO_set_output(RX_INV_EN,0);
+	MSS_GPIO_set_output(MSS_GPIO_3, 1);
+	MSS_GPIO_set_output(ADF_RST,1);
 	return res;
 }
 

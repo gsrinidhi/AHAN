@@ -610,8 +610,8 @@ void thermistor_calib_auto(char *data,uint8_t size) {
 void adf_init(char *data, uint8_t size) {
 	
 	uint32_t before = 0xFFFFFFFF,current,limit;
-	uint8_t buf=0, count=0;
-	uint8_t flag = 0,rx_data =0;
+	uint8_t buf=0xFF, count=0;
+	uint8_t flag = 1,rx_data =0;
 	//Set limit as a multiple of 100us
 	// limit = (data[0] - 48) * 100;
 	// limit = limit * MSS_SYS_M3_CLK_FREQ / 1000000;
@@ -625,14 +625,29 @@ void adf_init(char *data, uint8_t size) {
 //	TMR_start(&timer);
 
 	//Bring #CS Low by selecting the slave
-	ADF_SPI_SLAVE_SELECT(adf_spi, ADF_SPI_SLAVE);
+//	ADF_SPI_SLAVE_SELECT(adf_spi, ADF_SPI_SLAVE);
+	uint16_t i;
 
 	//Now we have to wait until MISO goes high, i.e some non zero data is obtained from the ADF
 	do {
 
-		ADF_SPI_READ_BYTE(adf_spi, &rx_data);
+//		ADF_SPI_BLOCK_READ(adf_spi, &rx_data ,1, &rx_data, 1);
+		MSS_GPIO_set_output(MSS_GPIO_3, 0);
+		for(i=0;i<350;i++){
+
+		}
+		ADF_SPI_BLOCK_READ(adf_spi, &buf ,1, &rx_data, 1);
+
+//		for(i=0;i<350;i++){
+//
+//		}
+
 		if(rx_data) {
 			flag = 0;
+			MSS_GPIO_set_output(MSS_GPIO_3, 1);
+			for(i=0;i<1000;i++){
+
+			}
 			break;
 		}
 		// current = TMR_current_value(&timer);
@@ -642,6 +657,25 @@ void adf_init(char *data, uint8_t size) {
 		count++;
 		// }
 	}while(count<10);
+
+
+	ADF_SPI_SLAVE_SELECT(adf_spi, ADF_SPI_SLAVE);
+	ADF_SPI_BLOCK_READ(adf_spi, &buf ,1, &rx_data, 1);
+	uint8_t check_val = 0,nop = ADF_NOP;
+	uint8_t tries = 0;
+	//Send NOP command(0xFF) until adf is ready to receive command and also adf is in idle state
+	do {
+		ADF_SPI_BLOCK_READ(adf_spi,&nop,1,&check_val,1);
+		if(((check_val & CMD_READY) != 0) && ((check_val & 0x02) != 0)) {
+			break;
+		}
+	}while(tries++ < 100);
+
+	if(tries >= 100) {
+		echo_str("\n\0Failed after miso high, cmd_ready and isle not got");
+	}
+
+
 
 	//Pull #CS high again
 	ADF_SPI_SLAVE_SELECT(adf_spi, 0);
@@ -656,10 +690,19 @@ void adf_init(char *data, uint8_t size) {
 	//Call adf_config to configure the ADF
 
 	count = config_adf7030();
+
 	if(!count) {
 		echo_str("\n\rADF Configured successfully");
 	} else {
 		print_num("\n\rADF Config failed with error code: ",count);
+	}
+	count = cmd_ready_set();
+	if(count!= 0){
+		echo_str("\n\0CMD ready not set after config");
+	}
+	count = adf_in_idle();
+	if(count != 0) {
+		echo_str("\n\0Not idle after cnofig");
 	}
 
 	//Write drivers for callibration using firmware module files
@@ -685,7 +728,7 @@ void adf_mem_write(char *data, uint8_t size) {
 	}
 	// addr = 0x20000394;
 	i = 9;
-	while(i<8) {
+	while(i<17) {
 		if(data[i] >='0' && data[i] <='9'){
 			mod = data[i] - 48;
 		}else if(data[i] >= 'A' && data[i] < 'F') {
@@ -817,10 +860,11 @@ void check_read_from_memory(char *data,uint8_t size) {
 		MSS_UART_get_rx(&g_mss_uart0,&rx_value,1);
 		spi_flag = 1;
 	}
-	echo_str("Transmitting SPI");
+	echo_str("\n\rTransmitting SPI");
 	MSS_UART_set_rx_handler(&g_mss_uart0,core_spi_uart_handler,MSS_UART_FIFO_SINGLE_BYTE);
+	set_adf_spi_instance(&g_core_spi0);
 	while(1) {
-		adf_read_from_memory(RMODE_1,0x2000063c,&rx_buffer,1);
+		adf_read_from_memory(RMODE_1,0x2000063c,&rx_buffer,4);
 		if(spi_flag == 1) {
 			break;
 		}
@@ -828,7 +872,41 @@ void check_read_from_memory(char *data,uint8_t size) {
 	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
 }
 
+void check_write_to_memory(char *data,uint8_t size) {
+	uint8_t spi_flag = 0,tx_buffer = 0xaa, rx_value, rx_buffer = 0xa0;
+	void core_spi_uart_handler(mss_uart_instance_t* this_uart) {
+		MSS_UART_get_rx(&g_mss_uart0,&rx_value,1);
+		spi_flag = 1;
+	}
+	echo_str("\n\rTransmitting SPI");
+	MSS_UART_set_rx_handler(&g_mss_uart0,core_spi_uart_handler,MSS_UART_FIFO_SINGLE_BYTE);
+	set_adf_spi_instance(&g_core_spi0);
+	while(1) {
+		adf_write_to_memory(WMODE_1,0x2000063c,&rx_buffer,1);
+		if(spi_flag == 1) {
+			break;
+		}
+	}
+	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
+}
 
+void adf_reset(char *data,uint8_t size) {
+	MSS_GPIO_set_output(ADF_RST,0);
+	uint16_t i = 0;
+	for(i=0;i<1000;i++){
 
+	}
+	MSS_GPIO_set_output(ADF_RST,1);
+	echo_str("\n\rADF Reset");
+}
+
+void adf_init_chk(char *data,uint8_t size){
+	char a;
+	while(1){
+		adf_reset(&a, 0);
+		adf_init(&a , 0);
+
+	}
+}
 
 

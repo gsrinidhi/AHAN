@@ -70,9 +70,14 @@ void adf_mem_read(char *data,uint8_t size);
  * @param data 
  * @param size 
  */
+
+void check_write_to_memory(char *data,uint8_t size);
 void check_read_from_memory(char *data,uint8_t size);
- char c[25];
- char argu[25];
+
+void adf_reset(char *data,uint8_t size);
+void adf_init_chk(char *data, uint8_t size);
+ char c[50];
+ char argu[50];
 
  uint32_t val;
  uint8_t command_index ;

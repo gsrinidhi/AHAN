@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <drivers/CoreSPI/core_spi.h>
+#include <drivers/mss_gpio/mss_gpio.h>
 //Code to prevent error squiggles when not using smartfusion2 libraries. Set to zero when running on smartfusion2
 #define NO_CROSS_COMPILE 0
 #if NO_CROSS_COMPILE == 1
@@ -32,10 +33,10 @@ extern ADF_SPI_INSTANCE_t *adf_spi;
 #define ADF_SPI_SLAVE           SPI_SLAVE_0
 
 //Set the block read command
-#define ADF_SPI_BLOCK_READ      SPI_block_read
+#define ADF_SPI_BLOCK_READ      adf_spi_trans_read
 
 //Set the block write command
-#define ADF_SPI_BLOCK_WRITE     SPI_block_write
+#define ADF_SPI_BLOCK_WRITE     adf_spi_trans_write
 
 //Set the single byte write command
 #define ADF_SPI_WRITE_BYTE      SPI_write_byte
@@ -155,8 +156,22 @@ uint8_t* adf_read_from_memory(uint8_t mode,uint32_t addr,uint8_t *data,uint32_t 
 
 uint8_t adf_send_cmd(uint8_t command);
 
+void adf_spi_trans_read( SPI_instance_t * this_spi,
+    uint8_t * cmd_buffer,
+    size_t cmd_byte_size,
+    uint8_t * rd_buffer,
+    size_t rd_byte_size);
+
+void adf_spi_trans_write( SPI_instance_t * this_spi,
+    uint8_t * cmd_buffer,
+    size_t cmd_byte_size,
+    uint8_t * wr_buffer,
+    size_t wr_byte_size);
+
 extern uint8_t radio_memory_configuration[];
 
 
 uint8_t config_adf7030();
+
+uint8_t cmd_ready_set();
 #endif

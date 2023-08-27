@@ -909,4 +909,34 @@ void adf_init_chk(char *data,uint8_t size){
 	}
 }
 
+void set_adf_state(char *data, uint8_t size) {
+	uint8_t cmd = 0;
+	if(data[0] == '0') {
+		cmd = CMD_PHY_SLEEP;
+	} else if(data[0] == '1') {
+		cmd = CMD_PHY_OFF;
+	}
+	else if(data[0] == '2') {
+		cmd = CMD_PHY_ON;
+	}
+
+	adf_send_cmd(cmd);
+}
+
+void get_adf_state(char *data,uint8_t data) {
+	uint8_t misc_fw[4] = {0x00,0x00,0x00,0x00};
+	uint8_t curr_mode = 0;
+	adf_read_from_memory(RMODE_1,MISC_FW,misc_fw,4);
+	curr_mode = misc_fw[2] & 0x3F;
+	if(curr_mode == 0) {
+		echo_str("\n\0In PHY_SLEEP");
+	} else if(curr_mode == 1) {
+		echo_str("\n\0In PHY_OFF");
+	} else if(curr_mode == 2) {
+		echo_str("\n\0In PHY_ON");
+	} else {
+		echo_str("Invalid state");
+	}
+}
+
 

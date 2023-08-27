@@ -76,6 +76,9 @@ void check_read_from_memory(char *data,uint8_t size);
 
 void adf_reset(char *data,uint8_t size);
 void adf_init_chk(char *data, uint8_t size);
+
+void set_adf_state(char *data, uint8_t size);
+void get_adf_state(char *data,uint8_t data);
  char c[50];
  char argu[50];
 

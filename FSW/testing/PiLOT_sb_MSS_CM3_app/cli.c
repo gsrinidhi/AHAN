@@ -126,6 +126,8 @@ void cli_init(){
 	add_command("check_adf_spi_write\0", check_write_to_memory, "Tested adf_write_to_memory");
 	add_command("adf_reset\0",adf_reset,"ADF Reset");
 	add_command("adf_init_chk\0", adf_init_chk, "Checking Done");
+	add_command("get_adf_state\0",get_adf_state,"Obtained adf state");
+	add_command("set_adf_state\0",set_adf_state,"ADF state set");
 	MSS_UART_polled_tx_string(&g_mss_uart0,prompt_msg);
 
 }

@@ -94,15 +94,15 @@ uint8_t adf_send_cmd(uint8_t command) {
     uint8_t check_val = 0,nop = ADF_NOP;
     uint8_t tries = 0;
     //Send NOP command(0xFF) until adf is ready to receive command
-//    do {
-//        ADF_SPI_BLOCK_READ(adf_spi,&nop,1,&check_val,1);
-//        if((check_val & CMD_READY) != 0) {
-//            break;
-//        }
-//    }while(tries++ < 100);
-//    if(tries >= 100) {
-//        return check_val;
-//    }
+   do {
+       ADF_SPI_BLOCK_READ(adf_spi,&nop,1,&check_val,1);
+       if((check_val & CMD_READY) != 0) {
+           break;
+       }
+   }while(tries++ < 100);
+   if(tries >= 100) {
+       return check_val;
+   }
 
     //Send the command
     ADF_SPI_WRITE_BYTE(adf_spi,&command);

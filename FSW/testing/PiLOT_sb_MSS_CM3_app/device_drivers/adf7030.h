@@ -139,6 +139,10 @@ extern ADF_SPI_INSTANCE_t *adf_spi;
 #define ERR_LENGTH_OVERFLOW     0x1//Error when length overflows 0xFFFF in config_adf()
 #define ERR_CMD_FAILED          0x2//Error when send_cmd fails
 
+// Important register addresses
+
+#define MISC_FW     0x400042B4
+
 void set_adf_spi_instance(ADF_SPI_INSTANCE_t *instance);
 
 /**

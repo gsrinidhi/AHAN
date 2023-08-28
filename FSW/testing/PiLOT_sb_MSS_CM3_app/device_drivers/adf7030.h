@@ -115,6 +115,9 @@ extern ADF_SPI_INSTANCE_t *adf_spi;
 #define WMODE_8     0u
 #define RMODE_8     (1 << RNW)
 
+//Calibration success bit
+#define CAL_SUCCESS     29
+
 /* SPI Command macros
     Macro to indicate a command byte
 */
@@ -129,19 +132,41 @@ extern ADF_SPI_INSTANCE_t *adf_spi;
 #define CMD_PHY_RX          0x83
 #define CMD_PHY_TX          0x84
 
+//Destination states
+#define PHY_SLEEP           (CMD_PHY_SLEEP & (~ADF_SPI_CMD))
+#define PHY_OFF             (CMD_PHY_OFF & (~ADF_SPI_CMD))
+#define PHY_ON              (CMD_PHY_on & (~ADF_SPI_CMD))
+#define PHY_RX              (CMD_PHY_RX & (~ADF_SPI_CMD))
+#define PHY_TX              (CMD_PHY_TX & (~ADF_SPI_CMD))
+
 #define CMD_CFG_DEV         0x85 //Command to apply a configuration
+
+#define CMD_DO_CAL          0x89 //Command to perform calibration
 
 #define CMD_READY           0x20 //To check if adf is ready to receive a command
 
 #define ADF_NOP             0xFF //NOP command
 
+#define EN_CALIB            0x20002971 //Enable calibration key
+
+#define DIS_CALIB           0x20002A21 //Disable calibration key
+
 //Macros to define errors
 #define ERR_LENGTH_OVERFLOW     0x1//Error when length overflows 0xFFFF in config_adf()
 #define ERR_CMD_FAILED          0x2//Error when send_cmd fails
+#define ERR_CONFIG_FILE_FAILED  0x3//Error to indicate applying config file failed
+#define ERR_CALIB_FILE_FAILED   0x4//Error to indicate applying calib file failed
+#define ERR_CALIB_FAILED            0x5//Error to indicate calibration failed
 
 // Important register addresses
 
-#define MISC_FW     0x400042B4
+#define MISC_FW                     0x400042B4
+#define SM_DATA_CALIBRATION         0x20000130
+#define PROFILE_RADIO_CAL_CFG1      0x2000036C
+#define PROFILE_CH_FREQ             0x200002EC
+#define PROFILE_PACKET_CFG          0x200002F4
+#define PROFILE_RADIO_DIG_TX_CFG0   0x20000304
+#define GENERIC_PKT_TEST_MODES0     0x20000548
 
 void set_adf_spi_instance(ADF_SPI_INSTANCE_t *instance);
 
@@ -172,10 +197,16 @@ void adf_spi_trans_write( SPI_instance_t * this_spi,
     uint8_t * wr_buffer,
     size_t wr_byte_size);
 
+uint8_t apply_file(uint8_t *file);
+
 extern uint8_t radio_memory_configuration[];
+
+extern uint8_t callibrations_config[];
 
 
 uint8_t config_adf7030();
 
 uint8_t cmd_ready_set();
+
+uint8_t adf_get_state();
 #endif

@@ -3,7 +3,7 @@
 #include "cli.h"
 uint8_t prompt_msg[30] =  "\n\r PiLOT Commanding : \0" ;
 char cmd_not_exists[50] = CMD_NOT_EXISTS;
-command_t cmd_list[20];
+command_t cmd_list[30];
 uint8_t cmd_in;
 void print_num(char *data,double num) {
 	echo_str(data);
@@ -110,25 +110,27 @@ void cli_init(){
 	add_command("disp_acc\0",get_imu_acc,"\n\rAcc displayed\0");
 	add_command("disp_gyro\0",get_imu_gyro,"\n\rGyro displayed\0");
 	add_command("I2C_TEST\0",i2c_test_cmd,"\n\rI2C Test Done");
-	add_command("echo\0",echo,"\n\r");
+	add_command("echo\0",echo,"\n\r\0");
 	// add_command("sd_test\0",sd_test,"SD test done");
 	// add_command("i2c_sigcheck\0",i2c_signal_check,"I2C Signal transmitted");
-	add_command("reset\0",test_reset,"Performed Reset");
+	add_command("reset\0",test_reset,"\n\rPerformed Reset\0");
 	// add_command("rs485_test\0",rs485_tx_test,"RS485 tx complete");
 	// add_command("vc_test_v\0",read_vc_sensor,"VC voltage test done");
 	// add_command("vc_test_i\0",read_vc_sensor_i,"VC current test done");
 	// add_command("adc_test\0", adc_test, "ADC_test done");
 	// add_command("thermistor_calib\0", thermistor_calib, "Thermistor_calib done");
-	add_command("adf_init\0",adf_init,"ADF Initialised");
-	add_command("adf_mem_write\0",adf_mem_write,"Written to ADF memory");
-	add_command("adf_mem_read\0",adf_mem_read,"Read from ADF memory");
-	add_command("core_spi_test\0",core_spi_test,"Tested Core spi");
-	add_command("check_adf_spi_read\0",check_read_from_memory,"Tested adf_read_from_memory");
-	add_command("check_adf_spi_write\0", check_write_to_memory, "Tested adf_write_to_memory");
-	add_command("adf_reset\0",adf_reset,"ADF Reset");
-	add_command("adf_init_chk\0", adf_init_chk, "Checking Done");
-	add_command("get_adf_state\0",get_adf_state,"Obtained adf state");
-	add_command("set_adf_state\0",set_adf_state,"ADF state set");
+	add_command("adf_init\0",adf_init,"\n\rADF Initialised\0");
+	add_command("adf_mem_write\0",adf_mem_write,"\n\rWritten to ADF memory\0");
+	add_command("adf_mem_read\0",adf_mem_read,"\n\rRead from ADF memory\0");
+	add_command("core_spi_test\0",core_spi_test,"\n\rTested Core spi\0");
+	add_command("check_adf_spi_read\0",check_read_from_memory,"\n\rTested adf_read_from_memory\0");
+	add_command("check_adf_spi_write\0", check_write_to_memory, "\n\rTested adf_write_to_memory\0");
+	add_command("adf_reset\0",adf_reset,"\n\rADF Reset\0");
+	add_command("adf_init_chk\0", adf_init_chk, "\n\rChecking Done\0");
+	add_command("get_adf_state\0",get_adf_state,"\n\rObtained adf state\0");
+	add_command("set_adf_state\0",set_adf_state,"\n\rADF state set\0");
+	add_command("get_adf_freq\0",get_adf_freq,"\n\rObtained adf frequency\0");
+	add_command("adf_Carrier_test\0",adf_transmit_carrier,"\n\rTransmitted carrier\0");
 	MSS_UART_polled_tx_string(&g_mss_uart0,prompt_msg);
 
 }

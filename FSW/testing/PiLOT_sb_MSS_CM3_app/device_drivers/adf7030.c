@@ -11,26 +11,27 @@ uint8_t radio_memory_configuration[ ] = {
 //    0x00
 };
 
+uint8_t callibrations_config[] = {
+    #include "OfflineCalibrations.cfg"
+};
+
 //variable to store the length of radio_memory_configuration array
 static uint32_t config_length_header;
 
 //Pointer to store the beginning of the SPI commands in radio_memory_configuration
 uint8_t *radio_memory_configuration_start_spi_command;
 
-uint8_t config_adf7030() {
-    uint32_t size = sizeof(radio_memory_configuration);
-    //Not using PDMA
-#if ADF_USE_PDMA == 0
-
-    uint32_t array_position = 0, i;
-    
+uint8_t apply_file(uint8_t *file) {
+    uint32_t size = sizeof(file);
+    uint32_t array_position = 0;
+    uint8_t *pSeqData;
     ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
     do 
     { 
       // Calculate the number of bytes to write
-      uint32_t length =  (*(radio_memory_configuration + array_position ) << 16) | 
-                         (*(radio_memory_configuration + array_position + 1) << 8) |
-                         (*(radio_memory_configuration + array_position + 2));
+      uint32_t length =  (*(file + array_position ) << 16) | 
+                         (*(file + array_position + 1) << 8) |
+                         (*(file + array_position + 2));
       
       if(length > 0xFFFF)
       {
@@ -38,26 +39,118 @@ uint8_t config_adf7030() {
       } 
       
       // Write the SPI data pointed to location (MEMORY_FILE + array_position) with specified length (length)
-      uint8_t * pSeqData = (radio_memory_configuration + array_position + 3);
+      pSeqData = (file + array_position + 3);
       
       // Transfer the Configuration sequence
-      MSS_GPIO_set_output(MSS_GPIO_3, 0);
       ADF_SPI_BLOCK_WRITE(adf_spi,pSeqData,1,(pSeqData+1),(length-4));
-      MSS_GPIO_set_output(MSS_GPIO_3, 1);
-      
-      for(i=0; i<1000; i++){
-
-      }
 
       // Update the array position to point to the next block
       array_position += length;
     
     }while(array_position < size); // Continue operation until full data file has been written
+    ADF_SPI_SLAVE_SELECT(adf_spi,0);
 
-    //Send command to apply the configuration
-    array_position = adf_send_cmd(CMD_CFG_DEV);
-    ADF_SPI_SLAVE_CLEAR(adf_spi,0);
-    return array_position;
+    return 0;
+
+}
+
+uint8_t config_adf7030() {
+//    uint32_t size = sizeof(radio_memory_configuration);
+    //Not using PDMA
+#if ADF_USE_PDMA == 0
+
+    // uint32_t array_position = 0, i;
+    
+    // ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
+    // do 
+    // { 
+    //   // Calculate the number of bytes to write
+    //   uint32_t length =  (*(radio_memory_configuration + array_position ) << 16) | 
+    //                      (*(radio_memory_configuration + array_position + 1) << 8) |
+    //                      (*(radio_memory_configuration + array_position + 2));
+      
+    //   if(length > 0xFFFF)
+    //   {
+    //      return ERR_LENGTH_OVERFLOW;
+    //   } 
+      
+    //   // Write the SPI data pointed to location (MEMORY_FILE + array_position) with specified length (length)
+    //   uint8_t * pSeqData = (radio_memory_configuration + array_position + 3);
+      
+    //   // Transfer the Configuration sequence
+    //   MSS_GPIO_set_output(MSS_GPIO_3, 0);
+    //   ADF_SPI_BLOCK_WRITE(adf_spi,pSeqData,1,(pSeqData+1),(length-4));
+    //   MSS_GPIO_set_output(MSS_GPIO_3, 1);
+      
+    //   for(i=0; i<1000; i++){
+
+    //   }
+
+    //   // Update the array position to point to the next block
+    //   array_position += length;
+    
+    // }while(array_position < size); // Continue operation until full data file has been written
+
+    uint8_t ret_val;
+    uint8_t en_calib_array[] = {EN_CALIB >> 24,(EN_CALIB >> 16) | 0xFF, (EN_CALIB >> 8) | 0xFF, EN_CALIB | 0xFF};
+    uint8_t dis_calib_array[] = {DIS_CALIB >> 24,(DIS_CALIB >> 16) | 0xFF, (DIS_CALIB >> 8) | 0xFF, DIS_CALIB | 0xFF};
+    uint8_t read_reg[6] = {0x00,0x00,0x00,0x00,0x00,0x00};
+
+    //Apply the configuration file
+    ret_val = apply_file(radio_memory_configuration);
+    if(ret_val) {
+        return ERR_CONFIG_FILE_FAILED;
+    }
+
+    //Apply the calibration file
+    ret_val = apply_file(callibrations_config);
+    if(ret_val) {
+        return ERR_CALIB_FILE_FAILED;
+    }
+
+    //Enable calibration
+    adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,en_calib_array,4);
+
+    //Issue CMD_CONFIG_DEV command
+    ret_val = adf_send_cmd(CMD_CFG_DEV);
+    if(ret_val) {
+        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_array,4);
+        return (ret_val | 0x80);
+    }
+
+    //Issue CMD_PHY_ON
+    ret_val = adf_send_cmd(CMD_PHY_ON);
+    if(ret_val) {
+        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_array,4);
+        return (ret_val | 0xC0);
+    }
+
+    //Issue CMD_DO_CAL
+    ret_val = adf_send_cmd(CMD_DO_CAL);
+    if(ret_val) {
+        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_array,4);
+        return (ret_val | 0xE0);
+    }
+
+    //Wait until adf returns to PHY_ON
+    while(1) {
+        ret_val = adf_get_state();
+        if(ret_val == PHY_ON) {
+            break;
+        }
+    }
+
+    //Check for successful calibration
+    adf_read_from_memory(RMODE_1,PROFILE_RADIO_CAL_CFG1,read_reg,4);
+    if((read_reg[2] & 0x20) == 0) {
+        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_array,4);
+        return ERR_CALIB_FAILED;
+    }
+
+    //Disable calibration
+    adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_array,4);
+
+    return 0;
 
 #else
 
@@ -101,11 +194,12 @@ uint8_t adf_send_cmd(uint8_t command) {
        }
    }while(tries++ < 100);
    if(tries >= 100) {
-       return check_val;
+       return ERR_CMD_FAILED;
    }
 
     //Send the command
     ADF_SPI_WRITE_BYTE(adf_spi,&command);
+    ADF_SPI_SLAVE_SELECT(adf_spi,0);
 
     return 0;
 
@@ -159,10 +253,10 @@ void adf_spi_trans_read( SPI_instance_t * this_spi,
 }
 
 void adf_spi_trans_write( SPI_instance_t * this_spi,
-	    uint8_t * cmd_buffer,
-	    size_t cmd_byte_size,
-	    uint8_t * wr_buffer,
-	    size_t wr_byte_size){
+    uint8_t * cmd_buffer,
+    size_t cmd_byte_size,
+    uint8_t * wr_buffer,
+    size_t wr_byte_size){
 
 	uint16_t i;
 	MSS_GPIO_set_output(MSS_GPIO_3, 0);
@@ -171,4 +265,12 @@ void adf_spi_trans_write( SPI_instance_t * this_spi,
 	for(i=0;i<1000;i++){
 
 	}
+}
+
+uint8_t adf_get_state() {
+    uint8_t misc_fw[6] = {0x00,0x00,0x00,0x00,0x00,0x00};
+    uint8_t curr_mode = 0;
+    adf_read_from_memory(RMODE_1,MISC_FW,misc_fw,4);
+    curr_mode = misc_fw[4] & 0x3F;
+    return curr_mode;
 }

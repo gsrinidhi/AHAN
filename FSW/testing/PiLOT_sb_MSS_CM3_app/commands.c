@@ -672,7 +672,7 @@ void adf_init(char *data, uint8_t size) {
 	}while(tries++ < 100);
 
 	if(tries >= 100) {
-		echo_str("\n\0Failed after miso high, cmd_ready and isle not got");
+		echo_str("\n\rFailed after miso high, cmd_ready and idle not got\0");
 	}
 
 
@@ -691,18 +691,34 @@ void adf_init(char *data, uint8_t size) {
 
 	count = config_adf7030();
 
-	if(!count) {
-		echo_str("\n\rADF Configured successfully");
-	} else {
-		print_num("\n\rADF Config failed with error code: ",count);
+	if(count == ERR_CONFIG_FILE_FAILED) {
+		echo_str("\n\rFailed to upload config file\0");
+		return;
+	} else if(count == ERR_CALIB_FILE_FAILED) {
+		echo_str("\n\rFailed to upload calib file\0");
+		return;
+	} else if(count == (ERR_CMD_FAILED | 0x80 )) {
+		echo_str("\n\rCMD_CFG_DEV failed\0");
+		return;
+	} else if(count == (ERR_CMD_FAILED | 0xC0)) {
+		echo_str("\n\rCMD_PHY_ON failed\0");
+		return;
+	} else if(count == (ERR_CMD_FAILED | 0xE0)) {
+		echo_str("\n\rCMD_DO_CAL failed\0");
+		return;
+	} else if(count == ERR_CALIB_FAILED) {
+		echo_str("\n\rCalibration failed");
+		return;
+	} else if(count == 0){
+		echo_str("\n\rConfig and Calibration successful\0")
 	}
 	count = cmd_ready_set();
 	if(count!= 0){
-		echo_str("\n\0CMD ready not set after config");
+		echo_str("\n\0CMD ready not set after config\0");
 	}
 	count = adf_in_idle();
 	if(count != 0) {
-		echo_str("\n\0Not idle after cnofig");
+		echo_str("\n\0Not idle after config\0");
 	}
 
 	//Write drivers for callibration using firmware module files
@@ -720,7 +736,7 @@ void adf_mem_write(char *data, uint8_t size) {
 		}else if(data[i] >='a' && data[i] <= 'f') {
 			mod = data[i] - 'a' + 10;
 		}else {
-			echo_str("Invalid address");
+			echo_str("\n\rInvalid address\0");
 			return;
 		}
 		addr = addr * 16 + mod;\
@@ -736,7 +752,7 @@ void adf_mem_write(char *data, uint8_t size) {
 		}else if(data[i] >='a' && data[i] <= 'f') {
 			mod = data[i] - 'a' + 10;
 		}else {
-			echo_str("Invalid address");
+			echo_str("\n\rInvalid data\0");
 			return;
 		}
 		wr_data = wr_data * 16 + mod;
@@ -769,8 +785,8 @@ void adf_mem_write(char *data, uint8_t size) {
 		wr_data/=16;
 	}
 	op_data[8] = '\0';
-	echo_str("Written to ADF memory\n\0");
-	echo_str("Address: \0");
+	echo_str("\n\rWritten to ADF memory\0");
+	echo_str("\n\rAddress: \0");
 	echo_str(op_addr);
 	echo_str("\n\r\0");
 	echo_str("Data: \0");
@@ -791,7 +807,7 @@ void adf_mem_read(char *data,uint8_t size) {
 		}else if(data[i] >='a' && data[i] <= 'f') {
 			mod = data[i] - 'a' + 10;
 		}else {
-			echo_str("Invalid address");
+			echo_str("\n\rInvalid address\0");
 			return;
 		}
 		addr = addr * 16 + mod;
@@ -826,8 +842,8 @@ void adf_mem_read(char *data,uint8_t size) {
 		rdata/=16;
 	}
 	op_data[8] = '\0';
-	echo_str("Read from ADF memory\n\0");
-	echo_str("Address: \0");
+	echo_str("\n\rRead from ADF memory\0");
+	echo_str("\n\rAddress: \0");
 	echo_str(op_addr);
 	echo_str("\n\r\0");
 	echo_str("Data: \0");
@@ -924,19 +940,92 @@ void set_adf_state(char *data, uint8_t size) {
 }
 
 void get_adf_state(char *data,uint8_t size) {
-		uint8_t misc_fw[6] = {0x00,0x00,0x00,0x00, 0x00, 0x00};
-		uint8_t curr_mode = 0;
-		adf_read_from_memory(RMODE_1,MISC_FW,misc_fw,4);
-		curr_mode = misc_fw[4] & 0x3F;
-		if(curr_mode == 0) {
-			echo_str("\n\rIn PHY_SLEEP\0");
-		} else if(curr_mode == 1) {
-			echo_str("\n\rIn PHY_OFF\0");
-		} else if(curr_mode == 2) {
-			echo_str("\n\rIn PHY_ON\0");
+	uint8_t misc_fw[6] = {0x00,0x00,0x00,0x00, 0x00, 0x00};
+	uint8_t curr_mode = 0;
+	adf_read_from_memory(RMODE_1,MISC_FW,misc_fw,4);
+	curr_mode = misc_fw[4] & 0x3F;
+	if(curr_mode == 0) {
+		echo_str("\n\rIn PHY_SLEEP\0");
+	} else if(curr_mode == 1) {
+		echo_str("\n\rIn PHY_OFF\0");
+	} else if(curr_mode == 2) {
+		echo_str("\n\rIn PHY_ON\0");
+	} else {
+		echo_str("\n\rInvalid state\0");
+	}
+}
+
+void get_adf_freq(char *data, uint8_t size) {
+	uint8_t read_reg[6] = {0x00,0x00,0x00,0x00,0x00,0x00};
+	uint32_t freq;
+	adf_read_from_memory(RMODE_1,PROFILE_CH_FREQ,read_reg,4);
+	freq = (read_reg[2] << 24) | (read_reg[3] << 16) | (read_reg[4] << 8) | read_reg[5];
+	print_num("\n\rFreq = \0",freq);
+}
+
+void adf_transmit_carrier(char *data,uint8_t size) {
+	uint8_t read_reg[6] = {0x00,0x00,0x00,0x00,0x00,0x00};
+	uint8_t tx_test_flag = 0,rx_value;
+	//Check if generic packet type us selected
+	adf_read_from_memory(RMODE_1,PROFILE_PACKET_CFG,read_reg,4);
+	if((read_reg[4] & 0xC0) == 0) {
+		echo_str("\n\rIn generic packet mode\0");
+	} else {
+		echo_str("\n\rIn ieee packet mode. Cannot transmit carrier\0");
+		return;
+	}
+
+	//Check which PA is selected
+	adf_read_from_memory(RMODE_1,PROFILE_RADIO_DIG_TX_CFG0,read_reg,4);
+	if((read_reg[2] & 0x40) == 0) {
+		echo_str("\n\rPA1 selected\0");
+	} else {
+		echo_str("\n\rPA2 selected\0");
+	}
+
+	//Display selected frequency
+	get_adf_freq(read_reg,4);
+
+	echo_str("\n\rProceed to transmit?(y/n)\0");
+	MSS_UART_set_rx_handler(&g_mss_uart0,tx_test_handler,MSS_UART_FIFO_SINGLE_BYTE);
+	void tx_test_handler(mss_uart_instance_t* this_uart) {
+		MSS_UART_get_rx(&g_mss_uart0,&rx_value,1);
+		if(rx_value == 'N' || rx_value == 'n') {
+			tx_test_flag = 1;
+		} else if(rx_value == 'y' || rx_value == 'Y') {
+			tx_test_flag = 2
 		} else {
-			echo_str("\n\rInvalid state\0");
+			tx_test_flag = 3
 		}
+	}
+	while(tx_test_flag == 0) {
+		if(tx_test_flag == 1) {
+			echo_str("\n\rTerminated trasnmission\0");
+			return;
+		}
+	}
+	if(data[0] != 'd') {
+		//Not demo
+
+		//Set to carrier transmit mode
+		adf_read_from_memory(RMODE_1,GENERIC_PKT_TEST_MODES0,read_reg,4);
+		read_reg[4] |= 0x1;
+		adf_write_to_memory(WMODE_1,GENERIC_PKT_TEST_MODES0,(read_reg+2),4);
+
+		//Send PHY_TX command
+		adf_send_cmd(CMD_PHY_TX);
+
+	}
+	while(1) {
+		if(tx_test_flag == 3) {
+			if(data[0] != 'd') {
+				adf_send_cmd(PHY_ON);
+			}
+			break;
+		}
+	}
+
+	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
 
 }
 

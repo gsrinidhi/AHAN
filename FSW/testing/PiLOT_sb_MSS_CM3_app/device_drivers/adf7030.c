@@ -133,7 +133,7 @@ uint8_t adf_in_idle() {
     //Send NOP command(0xFF) until adf is ready to receive command
     do {
         ADF_SPI_BLOCK_READ(adf_spi,&nop,1,&check_val,1);
-        if((check_val & 0x02) != 0) {
+        if((check_val & 0x04) != 0) {
             break;
         }
     }while(tries++ < 100);

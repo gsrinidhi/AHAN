@@ -923,20 +923,21 @@ void set_adf_state(char *data, uint8_t size) {
 	adf_send_cmd(cmd);
 }
 
-void get_adf_state(char *data,uint8_t data) {
-	uint8_t misc_fw[4] = {0x00,0x00,0x00,0x00};
-	uint8_t curr_mode = 0;
-	adf_read_from_memory(RMODE_1,MISC_FW,misc_fw,4);
-	curr_mode = misc_fw[2] & 0x3F;
-	if(curr_mode == 0) {
-		echo_str("\n\0In PHY_SLEEP");
-	} else if(curr_mode == 1) {
-		echo_str("\n\0In PHY_OFF");
-	} else if(curr_mode == 2) {
-		echo_str("\n\0In PHY_ON");
-	} else {
-		echo_str("Invalid state");
-	}
+void get_adf_state(char *data,uint8_t size) {
+		uint8_t misc_fw[6] = {0x00,0x00,0x00,0x00, 0x00, 0x00};
+		uint8_t curr_mode = 0;
+		adf_read_from_memory(RMODE_1,MISC_FW,misc_fw,4);
+		curr_mode = misc_fw[4] & 0x3F;
+		if(curr_mode == 0) {
+			echo_str("\n\rIn PHY_SLEEP\0");
+		} else if(curr_mode == 1) {
+			echo_str("\n\rIn PHY_OFF\0");
+		} else if(curr_mode == 2) {
+			echo_str("\n\rIn PHY_ON\0");
+		} else {
+			echo_str("\n\rInvalid state\0");
+		}
+
 }
 
 

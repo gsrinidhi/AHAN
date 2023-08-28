@@ -104,6 +104,7 @@ void cli_init(){
 	msg_index = 0;
 	val = 0;
 	cmd_in = 0;
+	set_adf_spi_instance(&g_core_spi0);
 	add_command("setbaudrate\0",set_baud_rate,"\n\rbaud rate set\0");
 	// add_command("view_thermistor\0",get_ADC_correct_values,"\n\rThermistor values displayed\0");
 	add_command("disp_acc\0",get_imu_acc,"\n\rAcc displayed\0");

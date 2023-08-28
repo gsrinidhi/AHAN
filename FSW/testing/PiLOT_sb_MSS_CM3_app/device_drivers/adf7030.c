@@ -92,8 +92,8 @@ uint8_t config_adf7030() {
     // }while(array_position < size); // Continue operation until full data file has been written
 
     uint8_t ret_val;
-    uint8_t en_calib_array[] = {EN_CALIB >> 24,(EN_CALIB >> 16) | 0xFF, (EN_CALIB >> 8) | 0xFF, EN_CALIB | 0xFF};
-    uint8_t dis_calib_array[] = {DIS_CALIB >> 24,(DIS_CALIB >> 16) | 0xFF, (DIS_CALIB >> 8) | 0xFF, DIS_CALIB | 0xFF};
+    uint8_t en_calib_array[] = {EN_CALIB >> 24,(EN_CALIB >> 16) & 0xFF, (EN_CALIB >> 8) & 0xFF, EN_CALIB & 0xFF};
+    uint8_t dis_calib_array[] = {DIS_CALIB >> 24,(DIS_CALIB >> 16) & 0xFF, (DIS_CALIB >> 8) & 0xFF, DIS_CALIB & 0xFF};
     uint8_t read_reg[6] = {0x00,0x00,0x00,0x00,0x00,0x00};
 
     //Apply the configuration file
@@ -102,33 +102,43 @@ uint8_t config_adf7030() {
         return ERR_CONFIG_FILE_FAILED;
     }
 
-    //Apply the calibration file
+//    Apply the calibration file
     ret_val = apply_file(callibrations_config);
     if(ret_val) {
         return ERR_CALIB_FILE_FAILED;
     }
 
     //Enable calibration
-    adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,en_calib_array,4);
+//    adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,en_calib_array,4);
 
     //Issue CMD_CONFIG_DEV command
     ret_val = adf_send_cmd(CMD_CFG_DEV);
+
     if(ret_val) {
-        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_array,4);
+//        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_array,4);
         return (ret_val | 0x80);
     }
 
+    while(1) {
+	   ret_val = adf_get_state();
+	   if(ret_val == PHY_OFF) {
+		   break;
+	   }
+   }
+
+//    adf_in_idle();
     //Issue CMD_PHY_ON
     ret_val = adf_send_cmd(CMD_PHY_ON);
     if(ret_val) {
-        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_array,4);
+//        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_array,4);
         return (ret_val | 0xC0);
     }
 
     //Issue CMD_DO_CAL
+    ret_val = adf_get_state();
     ret_val = adf_send_cmd(CMD_DO_CAL);
     if(ret_val) {
-        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_array,4);
+//        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_array,4);
         return (ret_val | 0xE0);
     }
 
@@ -143,12 +153,12 @@ uint8_t config_adf7030() {
     //Check for successful calibration
     adf_read_from_memory(RMODE_1,PROFILE_RADIO_CAL_CFG1,read_reg,4);
     if((read_reg[2] & 0x20) == 0) {
-        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_array,4);
+//        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_array,4);
         return ERR_CALIB_FAILED;
     }
 
     //Disable calibration
-    adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_array,4);
+//    adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_array,4);
 
     return 0;
 
@@ -198,7 +208,7 @@ uint8_t adf_send_cmd(uint8_t command) {
    }
 
     //Send the command
-    ADF_SPI_WRITE_BYTE(adf_spi,&command);
+    ADF_SPI_BLOCK_WRITE(adf_spi,&command, 1, &check_val, 1);
     ADF_SPI_SLAVE_SELECT(adf_spi,0);
 
     return 0;

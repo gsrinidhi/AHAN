@@ -666,7 +666,7 @@ void adf_init(char *data, uint8_t size) {
 	//Send NOP command(0xFF) until adf is ready to receive command and also adf is in idle state
 	do {
 		ADF_SPI_BLOCK_READ(adf_spi,&nop,1,&check_val,1);
-		if(((check_val & CMD_READY) != 0) && ((check_val & 0x02) != 0)) {
+		if(((check_val & CMD_READY) != 0) && ((check_val & 0x04) != 0)) {
 			break;
 		}
 	}while(tries++ < 100);
@@ -710,7 +710,7 @@ void adf_init(char *data, uint8_t size) {
 		echo_str("\n\rCalibration failed");
 		return;
 	} else if(count == 0){
-		echo_str("\n\rConfig and Calibration successful\0")
+		echo_str("\n\rConfig and Calibration successful\0");
 	}
 	count = cmd_ready_set();
 	if(count!= 0){
@@ -918,9 +918,14 @@ void adf_reset(char *data,uint8_t size) {
 
 void adf_init_chk(char *data,uint8_t size){
 	char a;
+	uint16_t i;
 	while(1){
-		adf_reset(&a, 0);
-		adf_init(&a , 0);
+//		adf_reset(&a, 0);
+		adf_send_cmd(CMD_PHY_OFF);
+		for(i=0; i<500;i++){
+
+		}
+//		adf_init(&a , 0);
 
 	}
 }
@@ -987,20 +992,22 @@ void adf_transmit_carrier(char *data,uint8_t size) {
 	get_adf_freq(read_reg,4);
 
 	echo_str("\n\rProceed to transmit?(y/n)\0");
-	MSS_UART_set_rx_handler(&g_mss_uart0,tx_test_handler,MSS_UART_FIFO_SINGLE_BYTE);
+	//MSS_UART_set_rx_handler(&g_mss_uart0,tx_test_handler,MSS_UART_FIFO_SINGLE_BYTE);
 	void tx_test_handler(mss_uart_instance_t* this_uart) {
 		MSS_UART_get_rx(&g_mss_uart0,&rx_value,1);
 		if(rx_value == 'N' || rx_value == 'n') {
 			tx_test_flag = 1;
 		} else if(rx_value == 'y' || rx_value == 'Y') {
-			tx_test_flag = 2
+			tx_test_flag = 2;
 		} else {
-			tx_test_flag = 3
+			tx_test_flag = 3;
 		}
 	}
+	MSS_UART_set_rx_handler(&g_mss_uart0,tx_test_handler,MSS_UART_FIFO_SINGLE_BYTE);
 	while(tx_test_flag == 0) {
 		if(tx_test_flag == 1) {
 			echo_str("\n\rTerminated trasnmission\0");
+			MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
 			return;
 		}
 	}
@@ -1019,7 +1026,7 @@ void adf_transmit_carrier(char *data,uint8_t size) {
 	while(1) {
 		if(tx_test_flag == 3) {
 			if(data[0] != 'd') {
-				adf_send_cmd(PHY_ON);
+				adf_send_cmd(CMD_PHY_ON);
 			}
 			break;
 		}

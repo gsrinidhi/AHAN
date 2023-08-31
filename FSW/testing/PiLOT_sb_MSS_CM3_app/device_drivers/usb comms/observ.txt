@@ -1,0 +1,2 @@
+In Spectrum Analyser, peak seen at 433.1 MHz, -26 dBm (PA2 connected)
+Transmit params were 437 MHz, 0 dBm, PA2

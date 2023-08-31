@@ -889,7 +889,9 @@ void check_read_from_memory(char *data,uint8_t size) {
 }
 
 void check_write_to_memory(char *data,uint8_t size) {
-	uint8_t spi_flag = 0,tx_buffer = 0xaa, rx_value, rx_buffer = 0xa0;
+	uint8_t spi_flag = 0,tx_buffer = 0xaa, rx_value;
+	uint8_t rx_buffer[] = {EN_CALIB >> 24,(EN_CALIB >> 16) & 0xFF, (EN_CALIB >> 8) & 0xFF, EN_CALIB & 0xFF};
+
 	void core_spi_uart_handler(mss_uart_instance_t* this_uart) {
 		MSS_UART_get_rx(&g_mss_uart0,&rx_value,1);
 		spi_flag = 1;
@@ -898,7 +900,7 @@ void check_write_to_memory(char *data,uint8_t size) {
 	MSS_UART_set_rx_handler(&g_mss_uart0,core_spi_uart_handler,MSS_UART_FIFO_SINGLE_BYTE);
 	set_adf_spi_instance(&g_core_spi0);
 	while(1) {
-		adf_write_to_memory(WMODE_1,0x2000063c,&rx_buffer,1);
+		adf_write_to_memory(WMODE_1,0x2000063c,&rx_buffer,4);
 		if(spi_flag == 1) {
 			break;
 		}
@@ -940,6 +942,12 @@ void set_adf_state(char *data, uint8_t size) {
 	else if(data[0] == '2') {
 		cmd = CMD_PHY_ON;
 	}
+	else if(data[0] == '4'){
+		cmd = CMD_PHY_TX;
+	}
+	else if(data[0] == '6'){
+		cmd = CMD_PHY_CCA;
+	}
 
 	adf_send_cmd(cmd);
 }
@@ -955,7 +963,15 @@ void get_adf_state(char *data,uint8_t size) {
 		echo_str("\n\rIn PHY_OFF\0");
 	} else if(curr_mode == 2) {
 		echo_str("\n\rIn PHY_ON\0");
-	} else {
+	}
+	else if(curr_mode == 4){
+		echo_str("\n\rIn PHY_TX\0");
+	}
+	else if(curr_mode == 4){
+		echo_str("\n\rIn PHY_CCA\0");
+	}
+	else {
+
 		echo_str("\n\rInvalid state\0");
 	}
 }
@@ -1013,17 +1029,31 @@ void adf_transmit_carrier(char *data,uint8_t size) {
 	}
 	if(data[0] != 'd') {
 		//Not demo
+		char dum;
 
 		//Set to carrier transmit mode
 		adf_read_from_memory(RMODE_1,GENERIC_PKT_TEST_MODES0,read_reg,4);
-		read_reg[4] |= 0x1;
-		adf_write_to_memory(WMODE_1,GENERIC_PKT_TEST_MODES0,(read_reg+2),4);
+		read_reg[3] |= 0x1;
+		while(1){
+			adf_write_to_memory(WMODE_1,GENERIC_PKT_TEST_MODES0,(read_reg+2),4);
+		}
+
 
 		//Send PHY_TX command
-		adf_send_cmd(CMD_PHY_TX);
+		uint8_t cmd_test  = adf_send_cmd(CMD_PHY_TX);
+		if(cmd_test == ERR_CMD_FAILED){
+			echo_str("\n\rCommand PHY-TX Failed\0");
+		}
+		get_adf_state(&dum, 1);
 
 	}
+
+	if(tx_test_flag == 2){
+		echo_str("\n\rTransmitting Carrier\0");
+	}
 	while(1) {
+		char dummy;
+//		get_adf_state(&dummy, 1);
 		if(tx_test_flag == 3) {
 			if(data[0] != 'd') {
 				adf_send_cmd(CMD_PHY_ON);

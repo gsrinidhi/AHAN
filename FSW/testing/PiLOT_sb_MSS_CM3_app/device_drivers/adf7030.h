@@ -131,6 +131,7 @@ extern ADF_SPI_INSTANCE_t *adf_spi;
 #define CMD_PHY_ON          0x82
 #define CMD_PHY_RX          0x83
 #define CMD_PHY_TX          0x84
+#define CMD_PHY_CCA			0x86
 
 //Destination states
 #define PHY_SLEEP           (CMD_PHY_SLEEP & (~ADF_SPI_CMD))
@@ -182,6 +183,8 @@ void set_adf_spi_instance(ADF_SPI_INSTANCE_t *instance);
 uint8_t adf_write_to_memory(uint8_t mode,uint32_t addr,uint8_t *data,uint32_t size);
 
 uint8_t* adf_read_from_memory(uint8_t mode,uint32_t addr,uint8_t *data,uint32_t size);
+
+uint8_t adf_send_cmd_without_ready(uint8_t command);
 
 uint8_t adf_send_cmd(uint8_t command);
 uint8_t adf_in_idle();

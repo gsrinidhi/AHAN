@@ -104,7 +104,7 @@ void cli_init(){
 	msg_index = 0;
 	val = 0;
 	cmd_in = 0;
-	set_adf_spi_instance(&g_core_spi0);
+//	set_adf_spi_instance(&g_core_spi0);
 	add_command("setbaudrate\0",set_baud_rate,"\n\rbaud rate set\0");
 	// add_command("view_thermistor\0",get_ADC_correct_values,"\n\rThermistor values displayed\0");
 	add_command("disp_acc\0",get_imu_acc,"\n\rAcc displayed\0");
@@ -112,7 +112,7 @@ void cli_init(){
 	add_command("I2C_TEST\0",i2c_test_cmd,"\n\rI2C Test Done");
 	add_command("echo\0",echo,"\n\r\0");
 	// add_command("sd_test\0",sd_test,"SD test done");
-	// add_command("i2c_sigcheck\0",i2c_signal_check,"I2C Signal transmitted");
+	 add_command("i2c_sigcheck\0",i2c_signal_check,"I2C Signal transmitted");
 	add_command("reset\0",test_reset,"\n\rPerformed Reset\0");
 	// add_command("rs485_test\0",rs485_tx_test,"RS485 tx complete");
 	// add_command("vc_test_v\0",read_vc_sensor,"VC voltage test done");

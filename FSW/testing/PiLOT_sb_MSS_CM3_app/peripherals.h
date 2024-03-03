@@ -25,7 +25,7 @@
 #include <drivers_config/sys_config/sys_config_mss_clocks.h>
 #include <drivers/CoreTimer/core_timer.h>
 #include <drivers/mss_watchdog/mss_watchdog.h>
-#include"../../AHAN_FSW/AHAN_sb_MSS_CM3_hw_platform/drivers/CoreSPI/core_spi.h"
+//#include"../../AHAN_FSW/AHAN_sb_MSS_CM3_hw_platform/drivers/CoreSPI/core_spi.h"
 #include <drivers/CoreSPI/core_spi_new.h>
 #define WDOG_SYSREG_CR_ENABLE_MASK      0x00000001u
 //UART
@@ -49,7 +49,7 @@ i2c_status_t core_i2c_status;
 timer_instance_t sd_timer;
 
 //Core SPI instance
-SPI_instance_t g_core_spi0;
+spi_instance_t g_core_spi0;
 #define SD_TIMER_BASE_ADDR	0x5000B000
 
 #define i2c_3 g_core_i2c1

@@ -632,7 +632,10 @@ void adf_init(char *data, uint8_t size) {
 	do {
 
 //		ADF_SPI_BLOCK_READ(adf_spi, &rx_data ,1, &rx_data, 1);
-		MSS_GPIO_set_output(MSS_GPIO_3, 0);
+		//Older version
+		//MSS_GPIO_set_output(MSS_GPIO_3, 0);
+		//New Version
+		ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
 		for(i=0;i<350;i++){
 
 		}
@@ -644,7 +647,10 @@ void adf_init(char *data, uint8_t size) {
 
 		if(rx_data) {
 			flag = 0;
-			MSS_GPIO_set_output(MSS_GPIO_3, 1);
+			//Older version
+//			MSS_GPIO_set_output(MSS_GPIO_3, 1);
+			//New version
+			ADF_SPI_SLAVE_CLEAR(adf_spi,ADF_SPI_SLAVE);
 			for(i=0;i<1000;i++){
 
 			}
@@ -678,7 +684,10 @@ void adf_init(char *data, uint8_t size) {
 
 
 	//Pull #CS high again
-	ADF_SPI_SLAVE_SELECT(adf_spi, 0);
+	//Old version
+//	ADF_SPI_SLAVE_SELECT(adf_spi, 0);
+	//New version
+	ADF_SPI_SLAVE_CLEAR(adf_spi,ADF_SPI_SLAVE);
 //	TMR_stop(&timer);
 	if(flag) {
 		echo_str("\n\rADF not waking up. Aborting initialisation\0");
@@ -863,16 +872,24 @@ void core_spi_test(char *data, uint8_t size) {
 	}
 	echo_str("Transmitting SPI");
 	MSS_UART_set_rx_handler(&g_mss_uart0,core_spi_uart_handler,MSS_UART_FIFO_SINGLE_BYTE);
-	SPI_slave_select(&g_core_spi0, SPI_SLAVE_0);
+	//Old version
+//	SPI_slave_select(&g_core_spi0, SPI_SLAVE_0);
+	//New Version
+	SPI_set_slave_select(&g_core_spi0,SPI_SLAVE_0);
 
 	while(1) {
-		SPI_transfer(&g_core_spi0,tx_buffer,&rx_buffer,1);
-//		SPI_transfer_block(&g_core_spi0, tx_buffer, 3, 0, 0);
+		//Old version
+//		SPI_transfer(&g_core_spi0,tx_buffer,&rx_buffer,1);
+		//New version
+		SPI_transfer_block(&g_core_spi0, tx_buffer, 3, 0, 0);
 		if(spi_flag == 1) {
 			break;
 		}
 	}
-	SPI_slave_select(&g_core_spi0, 0);
+	//Old version
+//	SPI_slave_select(&g_core_spi0, 0);
+	//New version
+	SPI_clear_slave_select(&g_core_spi0,SPI_SLAVE_0);
 	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
 }
 

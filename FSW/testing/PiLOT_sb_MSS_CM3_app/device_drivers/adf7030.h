@@ -2,7 +2,7 @@
 #define __ADF7030_H__
 
 #include <stdint.h>
-#include <drivers/CoreSPI/core_spi.h>
+#include <drivers/CoreSPI/core_spi_new.h>
 #include <drivers/mss_gpio/mss_gpio.h>
 //Code to prevent error squiggles when not using smartfusion2 libraries. Set to zero when running on smartfusion2
 #define NO_CROSS_COMPILE 0
@@ -13,21 +13,21 @@ int a;
 
 //The below three macros are present to make transitioning from Core to MSS or vice-versa easier
 // Set the spi instance used to communicate with the adf7030
-#define ADF_SPI_INSTANCE_t SPI_instance_t
+#define ADF_SPI_INSTANCE_t spi_instance_t
 
 extern ADF_SPI_INSTANCE_t *adf_spi;
 
 //Set the transfer frame function
-#define ADF_SPI_TRANSFER_FRAME SPI_transfer
+#define ADF_SPI_TRANSFER_FRAME SPI_transfer_frame
 
 //Set the transer block function
-#define ADF_SPI_TRANSFER_BLOCK SPI_transfer
+#define ADF_SPI_TRANSFER_BLOCK SPI_transfer_block
 
 //Set the slave select function
-#define ADF_SPI_SLAVE_SELECT    SPI_slave_select
+#define ADF_SPI_SLAVE_SELECT    SPI_set_slave_select
 
 //Set the slave clear function
-#define ADF_SPI_SLAVE_CLEAR     SPI_slave_select
+#define ADF_SPI_SLAVE_CLEAR     SPI_clear_slave_select
 
 //Set the slave cooresponding to ADF
 #define ADF_SPI_SLAVE           SPI_SLAVE_0
@@ -189,13 +189,13 @@ uint8_t adf_send_cmd_without_ready(uint8_t command);
 uint8_t adf_send_cmd(uint8_t command);
 uint8_t adf_in_idle();
 
-void adf_spi_trans_read( SPI_instance_t * this_spi,
+void adf_spi_trans_read( spi_instance_t * this_spi,
     uint8_t * cmd_buffer,
     size_t cmd_byte_size,
     uint8_t * rd_buffer,
     size_t rd_byte_size);
 
-void adf_spi_trans_write( SPI_instance_t * this_spi,
+void adf_spi_trans_write( spi_instance_t * this_spi,
     uint8_t * cmd_buffer,
     size_t cmd_byte_size,
     uint8_t * wr_buffer,

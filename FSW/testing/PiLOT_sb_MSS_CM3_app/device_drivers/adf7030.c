@@ -48,7 +48,9 @@ uint8_t apply_file(uint8_t *file) {
       array_position += length;
     
     }while(array_position < size); // Continue operation until full data file has been written
-    ADF_SPI_SLAVE_SELECT(adf_spi,0);
+    //ADF_SPI_SLAVE_SELECT(adf_spi,0);
+    //using new drivers
+    ADF_SPI_SLAVE_CLEAR(adf_spi,ADF_SPI_SLAVE);
 
     return 0;
 
@@ -216,7 +218,10 @@ uint8_t adf_send_cmd(uint8_t command) {
 
     //Send the command
     ADF_SPI_BLOCK_WRITE(adf_spi,&command, 1, &check_val, 1);
-    ADF_SPI_SLAVE_SELECT(adf_spi,0);
+    //Using old drivers
+    //ADF_SPI_SLAVE_SELECT(adf_spi,0);
+    //Using new drivers
+    ADF_SPI_SLAVE_CLEAR(adf_spi,ADF_SPI_SLAVE);
 
     return 0;
 
@@ -239,7 +244,10 @@ uint8_t adf_send_cmd_without_ready(uint8_t command) {
 
     //Send the command
     ADF_SPI_BLOCK_WRITE(adf_spi,&command, 1, &check_val, 1);
-    ADF_SPI_SLAVE_SELECT(adf_spi,0);
+    //Using old drivers
+    //ADF_SPI_SLAVE_SELECT(adf_spi,0);
+    //Using new drivers
+    ADF_SPI_SLAVE_CLEAR(adf_spi,ADF_SPI_SLAVE);
 
     return 0;
 
@@ -277,31 +285,43 @@ uint8_t adf_in_idle() {
     return 0;
 }
 
-void adf_spi_trans_read( SPI_instance_t * this_spi,
+void adf_spi_trans_read( spi_instance_t * this_spi,
     uint8_t * cmd_buffer,
     size_t cmd_byte_size,
     uint8_t * rd_buffer,
     size_t rd_byte_size){
 
 	uint16_t i;
-	MSS_GPIO_set_output(MSS_GPIO_3, 0);
-	SPI_block_read(this_spi, cmd_buffer, cmd_byte_size, rd_buffer, rd_byte_size);
-	MSS_GPIO_set_output(MSS_GPIO_3, 1);
+	//Using old drivers
+//	MSS_GPIO_set_output(MSS_GPIO_3, 0);
+//	SPI_block_read(this_spi, cmd_buffer, cmd_byte_size, rd_buffer, rd_byte_size);
+//	MSS_GPIO_set_output(MSS_GPIO_3, 1);
+	//Using new drivers
+	SPI_set_slave_select(this_spi,ADF_SPI_SLAVE);
+	SPI_transfer_block(this_spi,cmd_buffer,cmd_byte_size,0,0);
+	SPI_transfer_block(this_spi,0,0,rd_buffer,rd_byte_size);
+	SPI_clear_slave_select(this_spi,ADF_SPI_SLAVE);
 	for(i=0;i<1000;i++){
 
 	}
 }
 
-void adf_spi_trans_write( SPI_instance_t * this_spi,
+void adf_spi_trans_write( spi_instance_t * this_spi,
     uint8_t * cmd_buffer,
     size_t cmd_byte_size,
     uint8_t * wr_buffer,
     size_t wr_byte_size){
 
 	uint16_t i;
-	MSS_GPIO_set_output(MSS_GPIO_3, 0);
-	SPI_block_write(this_spi, cmd_buffer, cmd_byte_size, wr_buffer, wr_byte_size);
-	MSS_GPIO_set_output(MSS_GPIO_3, 1);
+	//Using old drivers
+//	MSS_GPIO_set_output(MSS_GPIO_3, 0);
+//	SPI_block_write(this_spi, cmd_buffer, cmd_byte_size, wr_buffer, wr_byte_size);
+//	MSS_GPIO_set_output(MSS_GPIO_3, 1);
+	//Using new drivers
+	SPI_set_slave_select(this_spi,ADF_SPI_SLAVE);
+	SPI_transfer_block(this_spi,cmd_buffer,cmd_byte_size,0,0);
+	SPI_transfer_block(this_spi,wr_buffer,wr_byte_size,0,0);
+	SPI_clear_slave_select(this_spi,ADF_SPI_SLAVE);
 	for(i=0;i<1000;i++){
 
 	}

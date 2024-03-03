@@ -802,7 +802,7 @@ void adf_mem_read(char *data,uint8_t size) {
 	while(i<8) {
 		if(data[i] >='0' && data[i] <='9'){
 			mod = data[i] - 48;
-		}else if(data[i] >= 'A' && data[i] < 'F') {
+		}else if(data[i] >= 'A' && data[i] <= 'F') {
 			mod = data[i] - 55;
 		}else if(data[i] >='a' && data[i] <= 'f') {
 			mod = data[i] - 'a' + 10;
@@ -852,7 +852,11 @@ void adf_mem_read(char *data,uint8_t size) {
 }
 
 void core_spi_test(char *data, uint8_t size) {
-	uint8_t spi_flag = 0,tx_buffer = 0xaa, rx_value, rx_buffer;
+	uint8_t spi_flag = 0, rx_value, rx_buffer;
+	uint8_t tx_buffer[3];
+	tx_buffer[0] = 0xaa;
+	tx_buffer[1] = 0xbb;
+	tx_buffer[2] = 0xcc;
 	void core_spi_uart_handler(mss_uart_instance_t* this_uart) {
 		MSS_UART_get_rx(&g_mss_uart0,&rx_value,1);
 		spi_flag = 1;
@@ -860,8 +864,10 @@ void core_spi_test(char *data, uint8_t size) {
 	echo_str("Transmitting SPI");
 	MSS_UART_set_rx_handler(&g_mss_uart0,core_spi_uart_handler,MSS_UART_FIFO_SINGLE_BYTE);
 	SPI_slave_select(&g_core_spi0, SPI_SLAVE_0);
+
 	while(1) {
-		SPI_transfer(&g_core_spi0,&tx_buffer,&rx_buffer,1);
+		SPI_transfer(&g_core_spi0,tx_buffer,&rx_buffer,1);
+//		SPI_transfer_block(&g_core_spi0, tx_buffer, 3, 0, 0);
 		if(spi_flag == 1) {
 			break;
 		}
@@ -922,12 +928,12 @@ void adf_init_chk(char *data,uint8_t size){
 	char a;
 	uint16_t i;
 	while(1){
-//		adf_reset(&a, 0);
-		adf_send_cmd(CMD_PHY_OFF);
+		adf_reset(&a, 0);
+		adf_init(&a , 0);
 		for(i=0; i<500;i++){
 
 		}
-//		adf_init(&a , 0);
+//
 
 	}
 }
@@ -1034,9 +1040,9 @@ void adf_transmit_carrier(char *data,uint8_t size) {
 		//Set to carrier transmit mode
 		adf_read_from_memory(RMODE_1,GENERIC_PKT_TEST_MODES0,read_reg,4);
 		read_reg[3] |= 0x1;
-		while(1){
+//		while(1){
 			adf_write_to_memory(WMODE_1,GENERIC_PKT_TEST_MODES0,(read_reg+2),4);
-		}
+//		}
 
 
 		//Send PHY_TX command

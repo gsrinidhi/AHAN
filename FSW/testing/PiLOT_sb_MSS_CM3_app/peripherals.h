@@ -26,6 +26,7 @@
 #include <drivers/CoreTimer/core_timer.h>
 #include <drivers/mss_watchdog/mss_watchdog.h>
 #include"../../AHAN_FSW/AHAN_sb_MSS_CM3_hw_platform/drivers/CoreSPI/core_spi.h"
+#include <drivers/CoreSPI/core_spi_new.h>
 #define WDOG_SYSREG_CR_ENABLE_MASK      0x00000001u
 //UART
 //defining PE bit of LSR register for MSS_UART

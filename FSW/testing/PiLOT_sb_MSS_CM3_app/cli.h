@@ -81,6 +81,7 @@ void set_adf_state(char *data, uint8_t size);
 void get_adf_state(char *data,uint8_t size);
 void get_adf_freq(char *data, uint8_t size);
 void adf_transmit_carrier(char *data,uint8_t size);
+void adf_rx(char *data,uint8_t size);
  char c[50];
  char argu[50];
 

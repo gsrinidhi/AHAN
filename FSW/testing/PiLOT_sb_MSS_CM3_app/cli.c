@@ -131,6 +131,7 @@ void cli_init(){
 	add_command("set_adf_state\0",set_adf_state,"\n\rADF state set\0");
 	add_command("get_adf_freq\0",get_adf_freq,"\n\rObtained adf frequency\0");
 	add_command("adf_Carrier_test\0",adf_transmit_carrier,"\n\rTransmitted carrier\0");
+	add_command("adf_rx\0", adf_rx, "\n\rADF_in_Rx");
 	MSS_UART_polled_tx_string(&g_mss_uart0,prompt_msg);
 
 }

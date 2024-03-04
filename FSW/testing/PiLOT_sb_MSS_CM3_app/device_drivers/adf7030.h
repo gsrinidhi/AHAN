@@ -168,6 +168,9 @@ extern ADF_SPI_INSTANCE_t *adf_spi;
 #define PROFILE_PACKET_CFG          0x200002F4
 #define PROFILE_RADIO_DIG_TX_CFG0   0x20000304
 #define GENERIC_PKT_TEST_MODES0     0x20000548
+#define GPIO_CONFIG_ADDR1			0x20000394
+#define GPIO_CONFIG_ADDR2			0x20000398
+
 
 void set_adf_spi_instance(ADF_SPI_INSTANCE_t *instance);
 
@@ -213,4 +216,6 @@ uint8_t config_adf7030();
 uint8_t cmd_ready_set();
 
 uint8_t adf_get_state();
+
+uint8_t adf_start_rx();
 #endif

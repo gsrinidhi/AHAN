@@ -107,22 +107,23 @@ uint8_t config_adf7030() {
     }
 
 //    Apply the calibration file
-    ret_val = apply_file(callibrations_config);
-    if(ret_val) {
-        return ERR_CALIB_FILE_FAILED;
-    }
+//    ret_val = apply_file(callibrations_config);
+//    if(ret_val) {
+//        return ERR_CALIB_FILE_FAILED;
+//    }
 
     //Enable calibration
 //    adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,en_calib_ar,4);
 
-    //Issue CMD_CONFIG_DEV command
+//    Issue CMD_CONFIG_DEV command
+//    return 0;
     ret_val = adf_send_cmd(CMD_CFG_DEV);
 
-    if(ret_val) {
+//    if(ret_val) {
 //        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_ar,4);
-        return (ret_val | 0x80);
-    }
-
+//        return (ret_val | 0x80);
+//    }
+//
     while(1) {
 	   ret_val = adf_get_state();
 	   if(ret_val == PHY_OFF) {
@@ -144,27 +145,27 @@ uint8_t config_adf7030() {
 	   }
    }
     //Issue CMD_DO_CAL
-    ret_val = adf_get_state();
-    ret_val = adf_send_cmd(CMD_DO_CAL);
-    if(ret_val) {
-//        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_ar,4);
-        return (ret_val | 0xE0);
-    }
+//    ret_val = adf_get_state();
+//    ret_val = adf_send_cmd(CMD_DO_CAL);
+//    if(ret_val) {
+////        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_ar,4);
+//        return (ret_val | 0xE0);
+//    }
 
     //Wait until adf returns to PHY_ON
-    while(1) {
-        ret_val = adf_get_state();
-        if(ret_val == PHY_ON) {
-            break;
-        }
-    }
+//    while(1) {
+//        ret_val = adf_get_state();
+//        if(ret_val == PHY_ON) {
+//            break;
+//        }
+//    }
 
     //Check for successful calibration
-    adf_read_from_memory(RMODE_1,PROFILE_RADIO_CAL_CFG1,read_reg,4);
-    if((read_reg[2] & 0x20) == 0) {
-//        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_ar,4);
-        return ERR_CALIB_FAILED;
-    }
+//    adf_read_from_memory(RMODE_1,PROFILE_RADIO_CAL_CFG1,read_reg,4);
+//    if((read_reg[2] & 0x20) == 0) {
+////        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_ar,4);
+//        return ERR_CALIB_FAILED;
+//    }
 
     //Disable calibration
 //    adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_ar,4);
@@ -183,7 +184,7 @@ uint8_t adf_write_to_memory(uint8_t mode,uint32_t addr,uint8_t *data,uint32_t si
         uint8_t cmd_data[] = {mode,(addr >> 24),((addr >> 16) & 0xFF),((addr >> 8) & 0xFF),(addr & 0xFF )};
         ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
         ADF_SPI_BLOCK_WRITE(adf_spi,cmd_data,5,data,size);
-        ADF_SPI_SLAVE_CLEAR(adf_spi,0);
+        ADF_SPI_SLAVE_CLEAR(adf_spi, ADF_SPI_SLAVE);
     }
 
     return 0;
@@ -196,7 +197,7 @@ uint8_t* adf_read_from_memory(uint8_t mode,uint32_t addr,uint8_t *data,uint32_t 
         uint8_t cmd_data[] = {mode,(addr >> 24),((addr >> 16) & 0xFF),((addr >> 8) & 0xFF),(addr & 0xFF )};
         ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
         ADF_SPI_BLOCK_READ(adf_spi,cmd_data,5,data,size+RMODE1_OFFSET);
-        ADF_SPI_SLAVE_CLEAR(adf_spi,0);
+        ADF_SPI_SLAVE_CLEAR(adf_spi, ADF_SPI_SLAVE);
     }
     return (data+RMODE1_OFFSET);
 }
@@ -292,17 +293,24 @@ void adf_spi_trans_read( spi_instance_t * this_spi,
     size_t rd_byte_size){
 
 	uint16_t i;
+	uint8_t r_buf[6];
+	r_buf[0] = 0x00;
 	//Using old drivers
 //	MSS_GPIO_set_output(MSS_GPIO_3, 0);
 //	SPI_block_read(this_spi, cmd_buffer, cmd_byte_size, rd_buffer, rd_byte_size);
 //	MSS_GPIO_set_output(MSS_GPIO_3, 1);
 	//Using new drivers
-	SPI_set_slave_select(this_spi,ADF_SPI_SLAVE);
-	SPI_transfer_block(this_spi,cmd_buffer,cmd_byte_size,0,0);
-	SPI_transfer_block(this_spi,0,0,rd_buffer,rd_byte_size);
-	SPI_clear_slave_select(this_spi,ADF_SPI_SLAVE);
-	for(i=0;i<1000;i++){
+//	SPI_set_slave_select(this_spi,ADF_SPI_SLAVE);
 
+
+		SPI_transfer_block(this_spi,cmd_buffer,cmd_byte_size,r_buf,rd_byte_size);
+
+//	SPI_transfer_block(this_spi,0,0,rd_buffer,rd_byte_size);
+//	SPI_clear_slave_select(this_spi,ADF_SPI_SLAVE);
+	for(i=0;i<1000;i++){
+		if(i<rd_byte_size){
+			rd_buffer[i] = r_buf[i];
+		}
 	}
 }
 
@@ -312,16 +320,24 @@ void adf_spi_trans_write( spi_instance_t * this_spi,
     uint8_t * wr_buffer,
     size_t wr_byte_size){
 
-	uint16_t i;
+	uint8_t data[300];
+	uint16_t i = 0;
+
+	for(;i<cmd_byte_size;i++){
+		data[i] = cmd_buffer[i];
+	}
+	for(;i<cmd_byte_size + wr_byte_size;i++){
+		data[i] = wr_buffer[i-cmd_byte_size];
+	}
 	//Using old drivers
 //	MSS_GPIO_set_output(MSS_GPIO_3, 0);
 //	SPI_block_write(this_spi, cmd_buffer, cmd_byte_size, wr_buffer, wr_byte_size);
 //	MSS_GPIO_set_output(MSS_GPIO_3, 1);
 	//Using new drivers
-	SPI_set_slave_select(this_spi,ADF_SPI_SLAVE);
-	SPI_transfer_block(this_spi,cmd_buffer,cmd_byte_size,0,0);
-	SPI_transfer_block(this_spi,wr_buffer,wr_byte_size,0,0);
-	SPI_clear_slave_select(this_spi,ADF_SPI_SLAVE);
+//	SPI_set_slave_select(this_spi,ADF_SPI_SLAVE);
+	SPI_transfer_block(this_spi,data,cmd_byte_size + wr_byte_size,0,0);
+//	SPI_transfer_block(this_spi,wr_buffer,wr_byte_size,0,0);
+//	SPI_clear_slave_select(this_spi,ADF_SPI_SLAVE);
 	for(i=0;i<1000;i++){
 
 	}
@@ -333,4 +349,30 @@ uint8_t adf_get_state() {
     adf_read_from_memory(RMODE_1,MISC_FW,misc_fw,4);
     curr_mode = misc_fw[4] & 0x3F;
     return curr_mode;
+}
+
+void adf_config_gpio(){
+
+
+	uint8_t data1[4] = {0x18, 0x19, 0x1A, 0x1B};
+//	uint8_t	data2[4] = {0x1C, 0x1D, 0x1E, 0x1F};
+
+
+	adf_write_to_memory(WMODE_1, GPIO_CONFIG_ADDR1, data1, sizeof(data1));
+
+
+}
+
+uint8_t adf_start_rx(){
+
+
+	adf_config_gpio();
+
+				// Enter the GPIO Component to be Enabled Or disabled
+									// Power On LNA connected to GPIO_0 in older design and GPIO_1 in newer version.
+	adf_send_cmd(CMD_PHY_RX);		// After ADF gets into PHY_RX it waits for Preamble to get detected.
+									// Once the Preamble is detected, ADF generates interrupt
+
+
+
 }

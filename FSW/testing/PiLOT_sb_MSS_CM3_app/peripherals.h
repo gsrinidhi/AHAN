@@ -63,7 +63,7 @@ spi_instance_t g_core_spi0;
 #define SD_CARD_GPIO				MSS_GPIO_10
 #define TX_INV_EN					MSS_GPIO_8
 #define RX_INV_EN					MSS_GPIO_7
-#define ADF_RST						MSS_GPIO_14
+#define ADF_RST						MSS_GPIO_5
 
 #define TIMER_COUNT_PER_MS 100000 //Number of counts in one millisecond 1t 100MHz
 #define FULL_SCALE_TIME_MS 42949 //Number of milliseconds for the 32 bit counter to completely countdown at 100MHz

@@ -696,7 +696,14 @@ void adf_init(char *data, uint8_t size) {
 
 	echo_str("\n\rADF Woken up\0");
 
+	uint8_t ret_val;
 	//Call adf_config to configure the ADF
+	while(1) {
+	   ret_val = adf_get_state();
+	   if(ret_val == PHY_OFF) {
+		   break;
+	   }
+   }
 
 	count = config_adf7030();
 
@@ -805,7 +812,8 @@ void adf_mem_write(char *data, uint8_t size) {
 
 void adf_mem_read(char *data,uint8_t size) {
 	uint32_t addr = 0,rdata;
-	uint8_t i = 0,r_data[6],*r_data_p;
+	uint8_t i = 0,r_data[11],*r_data_p;
+	r_data[0] = 0x00;
 	uint8_t mod = 1,rem = 1;
 	uint8_t op_addr[9] = "00000000\0",op_data[9] = "00000000\0";
 	while(i<8) {
@@ -825,7 +833,9 @@ void adf_mem_read(char *data,uint8_t size) {
 	// addr = 0x20000394;
 
 	set_adf_spi_instance(&g_core_spi0);
-	r_data_p = adf_read_from_memory(RMODE_1,addr,r_data,4);
+	while(r_data[0] == 0x00){
+		r_data_p = adf_read_from_memory(RMODE_1,addr,r_data,4);
+	}
 	rdata = (r_data[2] << 24) | (r_data[3] << 16) | (r_data[4] << 8) | r_data[5];
 	i = 7;
 	while(addr) {
@@ -894,7 +904,7 @@ void core_spi_test(char *data, uint8_t size) {
 }
 
 void check_read_from_memory(char *data,uint8_t size) {
-	uint8_t spi_flag = 0,tx_buffer = 0xaa, rx_value, rx_buffer;
+	uint8_t spi_flag = 0,tx_buffer = 0xaa, rx_value, rx_buffer[11];
 	void core_spi_uart_handler(mss_uart_instance_t* this_uart) {
 		MSS_UART_get_rx(&g_mss_uart0,&rx_value,1);
 		spi_flag = 1;
@@ -903,7 +913,7 @@ void check_read_from_memory(char *data,uint8_t size) {
 	MSS_UART_set_rx_handler(&g_mss_uart0,core_spi_uart_handler,MSS_UART_FIFO_SINGLE_BYTE);
 	set_adf_spi_instance(&g_core_spi0);
 	while(1) {
-		adf_read_from_memory(RMODE_1,0x2000063c,&rx_buffer,4);
+		adf_read_from_memory(RMODE_1,0x200002EC,&rx_buffer,4);
 		if(spi_flag == 1) {
 			break;
 		}
@@ -976,8 +986,9 @@ void set_adf_state(char *data, uint8_t size) {
 }
 
 void get_adf_state(char *data,uint8_t size) {
-	uint8_t misc_fw[6] = {0x00,0x00,0x00,0x00, 0x00, 0x00};
+	uint8_t misc_fw[11] = {0x00,0x00,0x00,0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 	uint8_t curr_mode = 0;
+	set_adf_spi_instance(&g_core_spi0);
 	adf_read_from_memory(RMODE_1,MISC_FW,misc_fw,4);
 	curr_mode = misc_fw[4] & 0x3F;
 	if(curr_mode == 0) {
@@ -1087,6 +1098,29 @@ void adf_transmit_carrier(char *data,uint8_t size) {
 
 	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
 
+}
+
+void adf_rx(char* data, uint8_t size){
+
+	uint8_t spi_flag = 0;
+	uint8_t rx_value, rx_buffer;
+	void core_spi_uart_handler(mss_uart_instance_t* this_uart) {
+		MSS_UART_get_rx(&g_mss_uart0,&rx_value,1);
+		spi_flag = 1;
+	}
+
+	set_adf_spi_instance(&g_core_spi0);
+	MSS_UART_set_rx_handler(&g_mss_uart0,core_spi_uart_handler,MSS_UART_FIFO_SINGLE_BYTE);
+
+	while(1){
+		adf_start_rx();
+		if(spi_flag == 1) {
+			break;
+		}
+	}
+
+
+	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
 }
 
 

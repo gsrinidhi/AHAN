@@ -131,7 +131,14 @@ void cli_init(){
 	add_command("set_adf_state\0",set_adf_state,"\n\rADF state set\0");
 	add_command("get_adf_freq\0",get_adf_freq,"\n\rObtained adf frequency\0");
 	add_command("adf_Carrier_test\0",adf_transmit_carrier,"\n\rTransmitted carrier\0");
-	add_command("adf_rx\0", adf_rx, "\n\rADF_in_Rx");
+	add_command("adf_set_gpio\0", adf_set_gpio, "\n\rADF_GPIO_set");
+	add_command("read_cmd_buf\0", read_cmd_buf, "\n\rCmd_Read_Done");
+	add_command("get_temp\0", get_temp, "Got Temperature Readings");
+	add_command("get_rssi\0", get_rssi, "\n\rGot_RSSI_Readings");
+	add_command("get_rx\0", get_rx, "\n\rPacket_Received");
+	add_command("get_status\0", get_adf_status, "\n\rGot ADF Status");
+	add_command("clr_intr\0", clr_intr, "\n\rINTR_CLR");
+	add_command("tx_pkt\0", pkt_tx, "\n\rPacket Transmitted");
 	MSS_UART_polled_tx_string(&g_mss_uart0,prompt_msg);
 
 }

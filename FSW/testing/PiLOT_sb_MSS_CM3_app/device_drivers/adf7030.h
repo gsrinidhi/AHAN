@@ -124,6 +124,8 @@ extern ADF_SPI_INSTANCE_t *adf_spi;
 #define ADF_SPI_CMD     0x80
 
 #define RMODE1_OFFSET       2
+#define SIZEOFCONFIG		728
+#define SIZEOFCALIB			7012
 
 //The below are the commands to reach a particular destination state
 #define CMD_PHY_SLEEP       0x80
@@ -139,12 +141,15 @@ extern ADF_SPI_INSTANCE_t *adf_spi;
 #define PHY_ON              (CMD_PHY_ON & (~ADF_SPI_CMD))
 #define PHY_RX              (CMD_PHY_RX & (~ADF_SPI_CMD))
 #define PHY_TX              (CMD_PHY_TX & (~ADF_SPI_CMD))
+#define MON					0x0A
 
 #define CMD_CFG_DEV         0x85 //Command to apply a configuration
 
 #define CMD_DO_CAL          0x89 //Command to perform calibration
 
 #define CMD_READY           0x20 //To check if adf is ready to receive a command
+
+#define CMD_MON				0x8A
 
 #define ADF_NOP             0xFF //NOP command
 
@@ -170,7 +175,16 @@ extern ADF_SPI_INSTANCE_t *adf_spi;
 #define GENERIC_PKT_TEST_MODES0     0x20000548
 #define GPIO_CONFIG_ADDR1			0x20000394
 #define GPIO_CONFIG_ADDR2			0x20000398
+#define TX_CONFIG1_REG				0x20000308
+#define TX_BUFFER					0x20000AF0		// Check the addresses of TX and RX Buffer
+#define RX_BUFFER					0x20000C18
+#define RSSI_ADDR					0x20000538
+#define TEMP_ADDR					0x2000038C
+#define PROFILE_CCA_READBACK		0x2000037C
+#define GENERIC_PKT_FRAME_CFG1		0x20000500
+#define IRQ_CTRL_STATUS0			0x40003808
 
+uint8_t cmd_buff[16];
 
 void set_adf_spi_instance(ADF_SPI_INSTANCE_t *instance);
 
@@ -204,7 +218,11 @@ void adf_spi_trans_write( spi_instance_t * this_spi,
     uint8_t * wr_buffer,
     size_t wr_byte_size);
 
-uint8_t apply_file(uint8_t *file);
+uint8_t apply_file(uint8_t *file, uint16_t size);
+
+uint8_t send_nop();
+
+uint8_t chk_status();
 
 extern uint8_t radio_memory_configuration[];
 
@@ -217,5 +235,9 @@ uint8_t cmd_ready_set();
 
 uint8_t adf_get_state();
 
-uint8_t adf_start_rx();
+uint8_t adf_config_gpio();
+
+void get_rssi_data(uint16_t* rssi);
+
+void get_temp_data(uint8_t *temp);
 #endif

@@ -6,7 +6,7 @@ void set_adf_spi_instance(ADF_SPI_INSTANCE_t *instance) {
     adf_spi = instance;
 }
 uint8_t radio_memory_configuration[ ] = {
-    #include "Settings_adf7030_3.txt"
+    #include "Settings_adf7030_CUB_rx.txt"
 //    //The below 0x00 is included because an "expected expression" error occurs if its deleted. Need to find out why?
 //    0x00
 };
@@ -21,8 +21,9 @@ static uint32_t config_length_header;
 //Pointer to store the beginning of the SPI commands in radio_memory_configuration
 uint8_t *radio_memory_configuration_start_spi_command;
 
-uint8_t apply_file(uint8_t *file) {
-    uint32_t size = sizeof(file);
+uint8_t apply_file(uint8_t *file, uint16_t size) {
+//    uint32_t size = sizeof(file);
+	//uint32_t size = 728;
     uint32_t array_position = 0;
     uint8_t *pSeqData;
     ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
@@ -101,13 +102,13 @@ uint8_t config_adf7030() {
     uint8_t read_reg[6] = {0x00,0x00,0x00,0x00,0x00,0x00};
 
     //Apply the configuration file
-    ret_val = apply_file(radio_memory_configuration);
+    ret_val = apply_file(radio_memory_configuration, SIZEOFCONFIG);
     if(ret_val) {
         return ERR_CONFIG_FILE_FAILED;
     }
 
 //    Apply the calibration file
-//    ret_val = apply_file(callibrations_config);
+//    ret_val = apply_file(callibrations_config, SIZEOFCALIB);
 //    if(ret_val) {
 //        return ERR_CALIB_FILE_FAILED;
 //    }
@@ -123,13 +124,13 @@ uint8_t config_adf7030() {
 //        adf_write_to_memory(WMODE_1,SM_DATA_CALIBRATION,dis_calib_ar,4);
 //        return (ret_val | 0x80);
 //    }
-//
-    while(1) {
-	   ret_val = adf_get_state();
-	   if(ret_val == PHY_OFF) {
-		   break;
-	   }
-   }
+////
+//    while(1) {
+//	   ret_val = adf_get_state();
+//	   if(ret_val == PHY_OFF) {
+//		   break;
+//	   }
+//   }
 
 //    adf_in_idle();
     //Issue CMD_PHY_ON
@@ -346,33 +347,288 @@ void adf_spi_trans_write( spi_instance_t * this_spi,
 uint8_t adf_get_state() {
     uint8_t misc_fw[6] = {0x00,0x00,0x00,0x00,0x00,0x00};
     uint8_t curr_mode = 0;
-    adf_read_from_memory(RMODE_1,MISC_FW,misc_fw,4);
+    while(!(misc_fw[0] == 0xe4 || misc_fw[0] == 0xA4)){
+    	adf_read_from_memory(RMODE_1,MISC_FW,misc_fw,4);
+    }
+
     curr_mode = misc_fw[4] & 0x3F;
     return curr_mode;
 }
 
-void adf_config_gpio(){
+uint8_t adf_config_gpio(){
 
 
-	uint8_t data1[4] = {0x18, 0x19, 0x1A, 0x1B};
+	uint8_t data1[4] = {0x1B, 0x1A, 0x19, 0x18};		//Configuring GPIO's as output for now. TODO generalize it to work as INTR also.
 //	uint8_t	data2[4] = {0x1C, 0x1D, 0x1E, 0x1F};
+	uint8_t rx_buffer[6];
+	rx_buffer[0] = 0x00;
+
+	adf_write_to_memory(WMODE_1, GPIO_CONFIG_ADDR1, data1, sizeof(data1));	// Power On LNA connected to GPIO_0 in older design and GPIO_1 in newer version.
+																			// Power On PA connected to GPIO_1 in older design and GPIO_2 in newer version
+	while(rx_buffer[0] == 0x00){
+		adf_read_from_memory(RMODE_1, GPIO_CONFIG_ADDR1, rx_buffer, 6);
+	}
+
+	rx_buffer[0] = 0x00;
+
+	while(rx_buffer[0] == 0x00){
+		adf_read_from_memory(RMODE_1, TX_CONFIG1_REG, rx_buffer, 6);
+	}
+
+	uint8_t data2[4];
 
 
-	adf_write_to_memory(WMODE_1, GPIO_CONFIG_ADDR1, data1, sizeof(data1));
+	data2[0] = rx_buffer[2] | 0x01;
+	data2[1] = rx_buffer[3] | 0x07;
+	data2[2] = rx_buffer[4];
+	data2[3] = rx_buffer[5];
 
+	adf_write_to_memory(WMODE_1, TX_CONFIG1_REG, data2, sizeof(data2));
+
+	while(rx_buffer[0] == 0x00){
+		adf_read_from_memory(RMODE_1, TX_CONFIG1_REG, rx_buffer, 6);
+	}
+
+
+	return 0;
 
 }
 
-uint8_t adf_start_rx(){
+void read_cmd(uint8_t * cmd_buff){
 
+	cmd_buff[0] = 0x00;
 
-	adf_config_gpio();
+	while(cmd_buff[0] == 0x00){
+		adf_read_from_memory(RMODE_1, RX_BUFFER, cmd_buff, 4);
+	}
+}
 
-				// Enter the GPIO Component to be Enabled Or disabled
-									// Power On LNA connected to GPIO_0 in older design and GPIO_1 in newer version.
-	adf_send_cmd(CMD_PHY_RX);		// After ADF gets into PHY_RX it waits for Preamble to get detected.
-									// Once the Preamble is detected, ADF generates interrupt
+void get_rssi_data(uint16_t* rssi){
 
+	uint8_t rx_buf[6];
+	rx_buf[0] = 0x00;
 
+	while(rx_buf[0] == 0x00){
+		adf_read_from_memory(RMODE_1, RSSI_ADDR, rx_buf, 4);
+	}
+
+	*rssi = (uint16_t)((rx_buf[2] & 0x07) << 8) + rx_buf[3];
+	*rssi = ~(*rssi) + 1;
+	*rssi = *rssi & 0x0FFF;
+	if(*rssi > 2048){
+		*rssi = *rssi - 2048;
+	}
+	*rssi = *rssi/4;
 
 }
+
+void get_temp_data(uint8_t *temp){
+
+	uint8_t rx_buf[6];
+	uint8_t feed;
+	rx_buf[0] = 0;
+	feed = adf_send_cmd(CMD_MON);
+	while(rx_buf[0] == 0x00){
+		adf_read_from_memory(RMODE_1, TEMP_ADDR, rx_buf, 4);
+	}
+
+	temp[0] = rx_buf[5];
+	temp[1] = rx_buf[4] & 0x0F;
+
+}
+
+void get_rssi_cca_data(uint16_t* rssi){
+	uint8_t rx_buf[6];
+	//uint16_t rssi;
+	rx_buf[0] = 0x00;
+
+	while(rx_buf[0] == 0x00){
+		adf_read_from_memory(RMODE_1, PROFILE_CCA_READBACK, rx_buf, 4);
+	}
+
+	*rssi = (uint16_t)((rx_buf[4] & 0x07) << 8) + rx_buf[5];
+	*rssi = ~(*rssi) + 1;
+	*rssi = *rssi & 0x0FFF;
+	if(*rssi > 2048){
+		*rssi = *rssi - 2048;
+	}
+	*rssi = *rssi/4;
+
+}
+
+uint8_t send_nop(){
+
+	ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
+	uint8_t nop = ADF_NOP;
+	uint8_t check_val;
+	uint8_t tries = 0;
+	uint8_t rem = 1, i=0;
+	uint8_t op_data[2] = "0\0";
+	uint8_t rdata;
+	do {
+	   ADF_SPI_BLOCK_READ(adf_spi,&nop,1, &check_val,1);
+	   if((check_val & CMD_READY) != 0) {
+		   break;
+	   }
+   }while(tries++ < 100);
+   if(tries >= 100) {
+	   return ERR_CMD_FAILED;
+   }
+
+   ADF_SPI_SLAVE_CLEAR(adf_spi,ADF_SPI_SLAVE);
+
+   rdata = check_val;
+   while(rdata){
+   		rem = rdata%16;
+   		if(rem<10) {
+   			op_data[i] = rem + '0';
+   		} else {
+   			op_data[i] = rem + 'A' - 10;
+   		}
+   		i--;
+   		rdata/=16;
+   	}
+   	op_data[1] = '\0';
+
+   	echo_str("\n\r\0");
+   	echo_str("Data: \0");
+	echo_str(op_data);
+	echo_str("\n\r\0");
+
+   return 0;
+}
+
+
+uint8_t chk_status(){
+
+	ADF_SPI_SLAVE_SELECT(adf_spi,ADF_SPI_SLAVE);
+	uint8_t nop = ADF_NOP;
+	uint8_t check_val;
+	uint8_t tries = 0;
+	uint8_t rem = 1, i=0;
+	uint8_t op_data[2] = "0\0";
+	uint8_t rdata;
+	do {
+	   ADF_SPI_BLOCK_READ(adf_spi,&nop,1, &check_val,1);
+	   if((check_val & CMD_READY) != 0) {
+		   break;
+	   }
+   }while(tries++ < 100);
+   if(tries >= 100) {
+	   return ERR_CMD_FAILED;
+   }
+
+   ADF_SPI_SLAVE_CLEAR(adf_spi,ADF_SPI_SLAVE);
+
+   rdata = check_val;
+   while(rdata){
+   		rem = rdata%16;
+   		if(rem<10) {
+   			op_data[i] = rem + '0';
+   		} else {
+   			op_data[i] = rem + 'A' - 10;
+   		}
+   		i--;
+   		rdata/=16;
+   	}
+   	op_data[1] = '\0';
+
+   	echo_str("\n\r\0");
+   	echo_str("Data: \0");
+	echo_str(op_data);
+	echo_str("\n\r\0");
+
+   return 0;
+}
+
+uint8_t rx_pkt(uint8_t * cmd, uint16_t* rssi){
+
+	uint8_t rx_buf[6];
+	rx_buf[5] = 0x00;
+	uint8_t clr_tx_buf[4];
+	clr_tx_buf[0] = 0xFF;
+	clr_tx_buf[1] = 0xFF;
+	clr_tx_buf[2] = 0xFF;
+	clr_tx_buf[3] = 0xFF;
+
+	uint8_t clr_tx[4];
+	clr_tx[0] = 0x00;
+	clr_tx[1] = 0x00;
+	clr_tx[2] = 0x00;
+	clr_tx[3] = 0xDF;
+
+	while(!(rx_buf[5] == 0x01 || rx_buf[5] == 0x03)){
+		adf_read_from_memory(RMODE_1, IRQ_CTRL_STATUS0, rx_buf, 4);
+	}
+
+	while(!(rx_buf[5] == 0x03 || rx_buf[5]) == 0xDF){
+		adf_read_from_memory(RMODE_1, IRQ_CTRL_STATUS0, rx_buf, 4);
+	}
+
+
+	while(!(rx_buf[5] == 0xDF || rx_buf[5] == 0xD7)){
+		adf_read_from_memory(RMODE_1, IRQ_CTRL_STATUS0, rx_buf, 4);
+	}
+
+	chk_status();
+
+	adf_read_from_memory(RMODE_1, RX_BUFFER, rx_buf, 4);
+
+	cmd[0] = rx_buf[5];
+	cmd[1] = rx_buf[4];
+	cmd[2] = rx_buf[3];
+	cmd[3] = rx_buf[2];
+
+	adf_write_to_memory(WMODE_1, RX_BUFFER, clr_tx_buf, 4);
+	adf_write_to_memory(WMODE_1, IRQ_CTRL_STATUS0, clr_tx, 4);
+	get_rssi_data(rssi);
+
+	return 0;
+}
+
+uint8_t tx_pkt(uint8_t* tx_buffer, uint8_t* size){
+//	uint8_t tx_buffer[4];
+//	tx_buffer[0] = 0xaa;
+//	tx_buffer[1] = 0xbb;
+//	tx_buffer[2] = 0xcc;
+//	tx_buffer[3] = 0xdd;
+	uint8_t rx_buf[6];
+	uint8_t set_size[4];
+	uint8_t clr_tx[4];
+	uint8_t i=0;
+	uint8_t tx_buf[*size];
+
+	for(;i<*size;i++){
+		tx_buf[i] = tx_buffer[*size - (i+1)];
+	}
+
+	clr_tx[0] = 0xff;
+	clr_tx[1] = 0xff;
+	clr_tx[2] = 0xff;
+	clr_tx[3] = 0xff;
+
+	adf_read_from_memory(RMODE_1, GENERIC_PKT_FRAME_CFG1, rx_buf, 4);
+
+	set_size[0] = rx_buf[2];
+	set_size[1] = rx_buf[3];
+	set_size[2] = rx_buf[4];
+	set_size[3] = *size;
+
+	adf_write_to_memory(WMODE_1, GENERIC_PKT_FRAME_CFG1, set_size, 4);
+
+	adf_write_to_memory(WMODE_1, TX_BUFFER, tx_buf, 4);
+
+	chk_status();
+
+	adf_send_cmd(CMD_PHY_TX);
+
+	chk_status();
+
+	if(adf_get_state() == PHY_ON){
+		adf_write_to_memory(WMODE_1, TX_BUFFER, clr_tx, 4);
+	}
+
+
+	return 0;
+}
+

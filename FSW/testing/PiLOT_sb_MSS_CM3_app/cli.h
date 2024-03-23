@@ -81,7 +81,14 @@ void set_adf_state(char *data, uint8_t size);
 void get_adf_state(char *data,uint8_t size);
 void get_adf_freq(char *data, uint8_t size);
 void adf_transmit_carrier(char *data,uint8_t size);
-void adf_rx(char *data,uint8_t size);
+void adf_set_gpio(char* data, uint8_t size);
+void read_cmd_buf(char* data, uint8_t size);
+void get_temp(char* data, uint8_t size);
+void get_rssi(char* data, uint8_t size);
+void get_rx(char* data, uint8_t size);
+void get_adf_status();
+void clr_intr();
+void pkt_tx();
  char c[50];
  char argu[50];
 

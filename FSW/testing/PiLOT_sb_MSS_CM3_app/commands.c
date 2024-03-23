@@ -612,6 +612,11 @@ void adf_init(char *data, uint8_t size) {
 	uint32_t before = 0xFFFFFFFF,current,limit;
 	uint8_t buf=0xFF, count=0;
 	uint8_t flag = 1,rx_data =0;
+	uint8_t enable_intr[4];
+	enable_intr[0] = 0x00;
+	enable_intr[1] = 0xFF;
+	enable_intr[2] = 0x10;
+	enable_intr[3] = 0x17;
 	//Set limit as a multiple of 100us
 	// limit = (data[0] - 48) * 100;
 	// limit = limit * MSS_SYS_M3_CLK_FREQ / 1000000;
@@ -737,6 +742,7 @@ void adf_init(char *data, uint8_t size) {
 		echo_str("\n\0Not idle after config\0");
 	}
 
+	adf_write_to_memory(WMODE_1, GENERIC_PKT_FRAME_CFG1, enable_intr, 4);
 	//Write drivers for callibration using firmware module files
 }
 
@@ -975,11 +981,18 @@ void set_adf_state(char *data, uint8_t size) {
 	else if(data[0] == '2') {
 		cmd = CMD_PHY_ON;
 	}
+	else if(data[0] == '3'){
+		cmd = CMD_PHY_RX;
+		send_nop();
+	}
 	else if(data[0] == '4'){
 		cmd = CMD_PHY_TX;
 	}
 	else if(data[0] == '6'){
 		cmd = CMD_PHY_CCA;
+	}
+	else if(data[0] == '7'){
+		cmd = CMD_MON;
 	}
 
 	adf_send_cmd(cmd);
@@ -989,7 +1002,10 @@ void get_adf_state(char *data,uint8_t size) {
 	uint8_t misc_fw[11] = {0x00,0x00,0x00,0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 	uint8_t curr_mode = 0;
 	set_adf_spi_instance(&g_core_spi0);
-	adf_read_from_memory(RMODE_1,MISC_FW,misc_fw,4);
+
+	while(misc_fw[0] == 0x00){
+		adf_read_from_memory(RMODE_1,MISC_FW,misc_fw,4);
+	}
 	curr_mode = misc_fw[4] & 0x3F;
 	if(curr_mode == 0) {
 		echo_str("\n\rIn PHY_SLEEP\0");
@@ -998,11 +1014,17 @@ void get_adf_state(char *data,uint8_t size) {
 	} else if(curr_mode == 2) {
 		echo_str("\n\rIn PHY_ON\0");
 	}
+	else if(curr_mode == 3) {
+		echo_str("\n\rIn PHY_RX\0");
+	}
 	else if(curr_mode == 4){
 		echo_str("\n\rIn PHY_TX\0");
 	}
-	else if(curr_mode == 4){
+	else if(curr_mode == 6){
 		echo_str("\n\rIn PHY_CCA\0");
+	}
+	else if(curr_mode == 0x0A){
+		echo_str("\n\rIn MONITORING\0");
 	}
 	else {
 
@@ -1100,27 +1122,122 @@ void adf_transmit_carrier(char *data,uint8_t size) {
 
 }
 
-void adf_rx(char* data, uint8_t size){
+void adf_set_gpio(char* data, uint8_t size){
 
 	uint8_t spi_flag = 0;
 	uint8_t rx_value, rx_buffer;
-	void core_spi_uart_handler(mss_uart_instance_t* this_uart) {
-		MSS_UART_get_rx(&g_mss_uart0,&rx_value,1);
-		spi_flag = 1;
-	}
+//	void core_spi_uart_handler(mss_uart_instance_t* this_uart) {
+//		MSS_UART_get_rx(&g_mss_uart0,&rx_value,1);
+//		spi_flag = 1;
+//	}
+//
+//	set_adf_spi_instance(&g_core_spi0);
+//	MSS_UART_set_rx_handler(&g_mss_uart0,core_spi_uart_handler,MSS_UART_FIFO_SINGLE_BYTE);
 
-	set_adf_spi_instance(&g_core_spi0);
-	MSS_UART_set_rx_handler(&g_mss_uart0,core_spi_uart_handler,MSS_UART_FIFO_SINGLE_BYTE);
+//	while(1){
+//		adf_start_rx();
 
-	while(1){
-		adf_start_rx();
-		if(spi_flag == 1) {
-			break;
-		}
-	}
+	adf_config_gpio();
+
+
+//		if(spi_flag == 1) {
+//			break;
+//		}
+//	}
 
 
 	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
 }
 
 
+void read_cmd_buf(char* data, uint8_t size){
+
+	uint8_t ip_cmd[6];
+	read_cmd(ip_cmd);
+
+	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
+}
+
+void get_temp(char* data, uint8_t size){
+	uint8_t temp[2];
+	uint8_t MSB;
+	uint8_t LSB;
+
+	get_temp_data(temp);
+
+	MSB = temp[1];
+	LSB = temp[0];
+
+//	echo_str(MSB);
+//	echo_str(LSB);
+	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
+}
+
+void get_rssi(char* data, uint8_t size){
+
+	uint16_t rssi;
+	uint8_t rssi_str[7] = "RSSI = ";
+	uint8_t dbm[6] = "dbm \n\r";
+	get_rssi_cca_data(&rssi);
+	print_num("\n\rRSSI: -\0", (double)rssi);
+//	echo_str("dbm\0");
+
+	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
+}
+
+void get_rx(char* data, uint8_t size){
+//	rx_packet();
+	uint8_t clr_intr[4];
+	uint16_t rssi;
+	uint8_t cmd_buf[4];
+	uint8_t curr_stat;
+	clr_intr[0] = 0x00;
+	clr_intr[1] = 0x00;
+	clr_intr[2] = 0x00;
+	clr_intr[3] = 0xDF;
+
+
+	rx_pkt(cmd_buf, &rssi);
+
+	chk_status();
+	curr_stat = adf_get_state();
+	while(!(curr_stat == PHY_ON)){
+		curr_stat = adf_get_state();
+	}
+
+	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
+}
+
+void clr_intr(){
+
+	uint8_t clr_intr[4];
+
+	clr_intr[0] = 0x00;
+	clr_intr[1] = 0x00;
+	clr_intr[2] = 0x00;
+	clr_intr[3] = 0xDF;
+
+	adf_write_to_memory(WMODE_1, IRQ_CTRL_STATUS0, clr_intr, 4);
+	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
+}
+
+void get_adf_status(){
+	chk_status();
+
+	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
+}
+
+void pkt_tx(){
+
+	uint8_t size = 4;
+	uint8_t tx_buf[4];
+	tx_buf[0] = 0x12;
+	tx_buf[1] = 0x34;
+	tx_buf[2] = 0x56;
+	tx_buf[3] = 0x78;
+
+	tx_pkt(tx_buf, &size);
+
+	MSS_UART_set_rx_handler(&g_mss_uart0,uart0_rx_handler,MSS_UART_FIFO_SINGLE_BYTE);
+
+}
